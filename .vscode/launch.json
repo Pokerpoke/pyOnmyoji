@@ -5,6 +5,20 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "run in powershell",
+            "type": "PowerShell",
+            "request": "launch",
+            "script": "${workspaceFolder}\\onmyoji.ps1",
+            "cwd": "${file}"
+        },
+        {
+            "name": "gui",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}\\ui.py",
+            "console": "integratedTerminal"
+        },
+        {
             "name": "match test from screenshot",
             "type": "python",
             "request": "launch",

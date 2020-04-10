@@ -4,7 +4,7 @@ import os
 import json
 import getopt
 import sys
-from window_funcs import *
+from onmyoji.window_funcs import *
 
 resource_path = "./mods/match_test/img/resource.png"
 template_path = "./mods/match_test/img/template.png"
@@ -21,10 +21,6 @@ def main():
     template = cv2.imread(template_path)
 
     match(resource, template, show_result=True)
-    # p = wait_until(template)
-    # print(p.x)
-    # print(p.y)
-
 
 if __name__ == "__main__":
     main()

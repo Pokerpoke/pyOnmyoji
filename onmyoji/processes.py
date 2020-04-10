@@ -8,30 +8,30 @@ import getopt
 import sys
 import random
 from datetime import datetime
-from window_funcs import *
+from .window_funcs import *
 
+background = False
 
-def main():
-
+def base_process(mod,times=1):
     handle = find_window("阴阳师-网易游戏")
     win32gui.ShowWindow(handle, win32con.SW_RESTORE)
     win32gui.SetForegroundWindow(handle)
     pos_window = get_window_pos(handle)
 
-    opts, args = getopt.getopt(sys.argv[1:], "t:")
-    times = 1
-    for option, value in opts:
-        if option == "-t":
-            times = value
-            print("Going to run for " + times + " times.")
-        elif option == "-c":
-            file_path = value
-            print("Going to use " + file_path + " as configure file.")
-        else:
-            assert False, "unhandled option"
+    # opts, args = getopt.getopt(sys.argv[1:], "t:")
+    # times = 1
+    # for option, value in opts:
+    #     if option == "-t":
+    #         times = value
+    #         print("Going to run for " + times + " times.")
+    #     elif option == "-c":
+    #         file_path = value
+    #         print("Going to use " + file_path + " as configure file.")
+    #     else:
+    #         assert False, "unhandled option"
 
     workspace_path = os.getcwd()
-    mod_name = args[0]
+    mod_name = mod
     mod_path = os.path.join(workspace_path, "mods", mod_name)
     strategy_file = os.path.join(mod_path, "strategy.json")
 
@@ -39,20 +39,22 @@ def main():
     with open(strategy_file) as f:
         j = json.load(f)
 
-    print("start ", mod_name)
+    print("Start ", mod_name)
 
     for i in range(int(times)):
-        print("times: " + str(i + 1))
+        print("Times: " + str(i + 1))
         for state in j["process"]:
-            print("current state: ", state["state"])
+            print("Current state: ", state["state"])
 
 
             if "img" in state:
                 state_img = os.path.join(mod_path, "img", state['img'])
                 template = cv2.imread(state_img)
 
+                timeout = 10
                 if "timeout" in state:
-                    p = wait_until(template,timeout=state["timeout"])
+                    timeout = state["timeout"]
+                p = wait_until(template,timeout=timeout)
                 if p == None:
                     print("template not found")
                     return
@@ -78,10 +80,10 @@ def main():
                               random.randint(-state["random"], state["random"]))
 
                 if "wait_before" in state:
-                    print("sleep for ", state["wait_before"], " seconds")
+                    print("Sleep for ", state["wait_before"], " seconds")
                     time.sleep(state["wait_before"])
 
-                click(p)
+                click(p,background=background)
 
             elif state["operation"] == "keep_clicking":
                 begin_time = datetime.now()
@@ -92,10 +94,10 @@ def main():
                                   random.randint(-state["random"], state["random"]))
 
                     if "wait_before" in state:
-                        print("sleep for ", state["wait_before"], " seconds")
+                        print("Sleep for ", state["wait_before"], " seconds")
                         time.sleep(state["wait_before"])
 
-                    click(p)
+                    click(p,background=background)
 
                     if "random_interval" in state:
                         time.sleep(state["interval"] +
@@ -112,7 +114,3 @@ def main():
                 time.sleep(state["wait_after"])
 
     print("finished")
-
-
-if __name__ == "__main__":
-    main()

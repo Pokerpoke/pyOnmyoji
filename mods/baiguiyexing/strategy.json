@@ -46,6 +46,7 @@
             "timeout": 80,
             "interval": 0.5,
             "random_interval": 0.2,
+            "random":2,
             "position_relative": {
                 "x": 0.8,
                 "y": 0.55

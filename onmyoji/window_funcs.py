@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 # -*- coding:utf-8 -*-
 
 import win32api
@@ -5,11 +6,12 @@ import win32con
 import win32gui
 import win32ui
 import cv2
+import time
+import random
 import numpy as np
 from PIL import Image
 
 title = "阴阳师-网易游戏"
-
 
 class Pos(object):
     def __init__(self, x=0, y=0, w=0, h=0, i=0):
@@ -48,12 +50,27 @@ def move(p):
     win32api.SetCursorPos((p.x, p.y))
 
 
-def click(p):
-    x = p.x
-    y = p.y
-    win32api.SetCursorPos((x, y))
-    win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN, x, y, 0, 0)
-    win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP, x, y, 0, 0)
+def click(p, background=False):
+    if background:
+        window_handle = win32gui.FindWindow(None, title)
+
+        pos_body = get_window_pos(window_handle)
+
+        x = p.x - pos_body.x
+        y = p.y - pos_body.y
+
+        long_position = win32api.MAKELONG(x, y)#模拟鼠标指针 传送到指定坐标
+        win32gui.SendMessage(window_handle, win32con.WM_MOUSEMOVE, 0, long_position)
+        win32gui.PostMessage(window_handle, win32con.WM_LBUTTONDOWN, 0, long_position)#模拟鼠标按下
+        time.sleep(random.randint(20, 80)/1000)
+        win32gui.SendMessage(window_handle, win32con.WM_LBUTTONUP, 0, long_position)#模拟鼠标弹起
+    else:
+        x = p.x
+        y = p.y
+
+        win32api.SetCursorPos((x, y))
+        win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN, x, y, 0, 0)
+        win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP, x, y, 0, 0)
 
 
 def find_window(title):
