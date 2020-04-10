@@ -4,16 +4,24 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
-        
         {
-            "name": "pyOnmyoji: match test",
+            "name": "match test from screenshot",
             "type": "python",
             "request": "launch",
             "program": "${workspaceFolder}\\match_test.py",
-            "console": "integratedTerminal"
+            "console": "integratedTerminal",
+            "args": ["screenshot"]
         },
         {
-            "name": "pyOnmyoji: baiguiyexing",
+            "name": "match test from file",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}\\match_test.py",
+            "console": "integratedTerminal",
+            "args": ["file"]
+        },
+        {
+            "name": "baiguiyexing",
             "type": "python",
             "request": "launch",
             "program": "${workspaceFolder}\\onmyoji.py",
@@ -21,12 +29,20 @@
             "args": ["baiguiyexing"]
         },
         {
-            "name": "pyOnmyoji: yuhun_member",
+            "name": "yuhun_member",
             "type": "python",
             "request": "launch",
             "program": "${workspaceFolder}\\onmyoji.py",
             "console": "integratedTerminal",
             "args": ["-t 5","yuhun_member"]
+        },
+        {
+            "name": "yuhun_leader",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}\\onmyoji.py",
+            "console": "integratedTerminal",
+            "args": ["-t 5","yuhun_leader"]
         }
     ]
 }
