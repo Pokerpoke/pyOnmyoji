@@ -1,0 +1,26 @@
+{
+    "process": [
+        {
+            "state": "win",
+            "operation": "click",
+            "img": "sheng_li.png",
+            "wait_before": 1,
+            "wait_after": 0,
+            "random": 50,
+            "offset_x": 300,
+            "offset_y": 300,
+            "timeout": 0
+        },
+        {
+            "state": "jie_suan",
+            "operation": "click",
+            "img": "jie_suan.png",
+            "wait_before": 2,
+            "wait_after": 50,
+            "random": 50,
+            "offset_x": 300,
+            "offset_y": 0,
+            "timeout": 0
+        }
+    ]
+}
