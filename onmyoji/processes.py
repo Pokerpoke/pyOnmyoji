@@ -8,11 +8,12 @@ import getopt
 import sys
 import random
 from datetime import datetime
-from .window_funcs import *
+from .utils import *
 
 background = False
 
-def base_process(mod,times=1):
+
+def base_process(mod, times=1):
     handle = find_window("阴阳师-网易游戏")
     win32gui.ShowWindow(handle, win32con.SW_RESTORE)
     win32gui.SetForegroundWindow(handle)
@@ -46,7 +47,6 @@ def base_process(mod,times=1):
         for state in j["process"]:
             print("Current state: ", state["state"])
 
-
             if "img" in state:
                 state_img = os.path.join(mod_path, "img", state['img'])
                 template = cv2.imread(state_img)
@@ -54,7 +54,7 @@ def base_process(mod,times=1):
                 timeout = 10
                 if "timeout" in state:
                     timeout = state["timeout"]
-                p = wait_until(template,timeout=timeout)
+                p = wait_until(template, timeout=timeout)
                 if p == None:
                     print("template not found")
                     return
@@ -83,7 +83,7 @@ def base_process(mod,times=1):
                     print("Sleep for ", state["wait_before"], " seconds")
                     time.sleep(state["wait_before"])
 
-                click(p,background=background)
+                click(p, background=background)
 
             elif state["operation"] == "keep_clicking":
                 begin_time = datetime.now()
@@ -97,7 +97,7 @@ def base_process(mod,times=1):
                         print("Sleep for ", state["wait_before"], " seconds")
                         time.sleep(state["wait_before"])
 
-                    click(p,background=background)
+                    click(p, background=background)
 
                     if "random_interval" in state:
                         time.sleep(state["interval"] +

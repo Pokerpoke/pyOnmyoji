@@ -150,6 +150,15 @@ def match(img_rgb, template_rgb, show_result=False):
 
     return pos
 
+def exists(template, timeout=10,interval=1,flag=0):
+    resource = get_screenshot(title)
+    pos = match(resource, template)
+    if len(pos) == 1:
+        return pos
+    elif len(pos) > 1:
+        return pos[-1]
+    else:
+        return None
 
 def wait_until(template, timeout=10, interval=1, flag=0):
     '''
@@ -183,4 +192,4 @@ def wait_until(template, timeout=10, interval=1, flag=0):
         if (end_time - begin_time).seconds >= timeout:
             break
 
-    return False
+    return None

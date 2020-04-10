@@ -1,0 +1,4 @@
+{
+    "cmake.configureOnOpen": false,
+    "python.linting.enabled": true
+}
