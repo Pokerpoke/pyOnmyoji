@@ -11,10 +11,10 @@ def main_process(times=1, time_used=7):
     for i in range(times):
         logging.info("Start for times: ", str(times + 1), ".")
 
-        logging.info("Search for tiao_zhan.png.")
-        p = u.wait_until(os.path.join(img_dir, "tiao_zhan.png"))
+        logging.info("Search for yao_qing_hao_you.png.")
+        p = u.wait_until(os.path.join(img_dir, "yao_qing_hao_you.png"))
         u.random_click(p, 20)
-        u.random_sleep(time_used+3, 0.3)
+        u.random_sleep(2, 0.3)
 
         logging.info("Search for sheng_li.png.")
         p = u.wait_until(os.path.join(img_dir, "sheng_li.png"))

@@ -8,7 +8,7 @@ import getopt
 import sys
 import random
 from datetime import datetime
-from .utils import *
+# from utils import *
 
 background = False
 

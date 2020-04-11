@@ -1,4 +1,19 @@
 {
-    "name": "yuhun",
-    "version": "0.1"
+    "name": "yuhun_member",
+    "text": "御魂（被邀请）",
+    "version": "0.1",
+    "params": [
+        {
+            "param": "times",
+            "text": "次数",
+            "param_t": "int",
+            "default": 1
+        },
+        {
+            "param": "time_uesd",
+            "text": "消耗时间",
+            "param_t": "int",
+            "default": 35
+        }
+    ]
 }

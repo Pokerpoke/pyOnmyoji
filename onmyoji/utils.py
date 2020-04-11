@@ -8,10 +8,20 @@ import win32ui
 import cv2
 import time
 import random
+import os
 import numpy as np
+import random
+import logging
 from PIL import Image
 
-title = "阴阳师-网易游戏"
+
+def get_title():
+    return os.environ.get("YYS_TITLE")
+
+
+def get_background():
+    return os.environ.get("YYS_BACKGROUND")
+
 
 class Pos(object):
     def __init__(self, x=0, y=0, w=0, h=0, i=0):
@@ -19,7 +29,6 @@ class Pos(object):
         self.y = y
         self.width = w
         self.height = h
-        self.__i = i
 
 
 class Point(object):
@@ -41,7 +50,7 @@ class Point(object):
         if other == None:
             return False
         elif self.x == other.x and self.y == other.y:
-            return False
+            return True
         else:
             return False
 
@@ -50,20 +59,27 @@ def move(p):
     win32api.SetCursorPos((p.x, p.y))
 
 
-def click(p, background=False):
-    if background:
-        window_handle = win32gui.FindWindow(None, title)
+def click(p):
+    background = get_background()
+    if p == None:
+        return
+
+    if background == "True":
+        window_handle = win32gui.FindWindow(None, get_title())
 
         pos_body = get_window_pos(window_handle)
 
         x = p.x - pos_body.x
         y = p.y - pos_body.y
 
-        long_position = win32api.MAKELONG(x, y)#模拟鼠标指针 传送到指定坐标
-        win32gui.SendMessage(window_handle, win32con.WM_MOUSEMOVE, 0, long_position)
-        win32gui.PostMessage(window_handle, win32con.WM_LBUTTONDOWN, 0, long_position)#模拟鼠标按下
+        long_position = win32api.MAKELONG(x, y)  # 模拟鼠标指针 传送到指定坐标
+        win32gui.SendMessage(
+            window_handle, win32con.WM_MOUSEMOVE, 0, long_position)
+        win32gui.PostMessage(
+            window_handle, win32con.WM_LBUTTONDOWN, 0, long_position)  # 模拟鼠标按下
         time.sleep(random.randint(20, 80)/1000)
-        win32gui.SendMessage(window_handle, win32con.WM_LBUTTONUP, 0, long_position)#模拟鼠标弹起
+        win32gui.SendMessage(
+            window_handle, win32con.WM_LBUTTONUP, 0, long_position)  # 模拟鼠标弹起
     else:
         x = p.x
         y = p.y
@@ -103,7 +119,7 @@ def get_window_pos(window_handle):
 
 
 def get_screenshot(title, filename=None):
-    handle = find_window(title)
+    handle = find_window(get_title())
     hwndDC = win32gui.GetWindowDC(handle)
     mfcDC = win32ui.CreateDCFromHandle(hwndDC)
     saveDC = mfcDC.CreateCompatibleDC()
@@ -124,8 +140,9 @@ def get_screenshot(title, filename=None):
     bmpinfo = saveBitMap.GetInfo()
     bmpstr = saveBitMap.GetBitmapBits(True)
     # 生成图像
-    im_PIL = Image.frombuffer(
-        'RGB', (bmpinfo['bmWidth'], bmpinfo['bmHeight']), bmpstr, 'raw', 'BGRX', 0, 1)
+    im_PIL = Image.frombuffer('RGB',
+                              (bmpinfo['bmWidth'], bmpinfo['bmHeight']),
+                              bmpstr, 'raw', 'BGRX', 0, 1)
     res = cv2.cvtColor(np.asarray(im_PIL), cv2.COLOR_RGB2BGR)
     return res
 
@@ -150,15 +167,21 @@ def match(img_rgb, template_rgb, show_result=False):
 
     return pos
 
-def exists(template, timeout=10,interval=1,flag=0):
-    resource = get_screenshot(title)
+
+def exists(template_path, timeout=10, interval=1, flag=0):
+    if type(template) == str:
+        template = cv2.imread(template)
+
+    resource = get_screenshot(get_title())
     pos = match(resource, template)
+
     if len(pos) == 1:
         return pos
     elif len(pos) > 1:
         return pos[-1]
     else:
         return None
+
 
 def wait_until(template, timeout=10, interval=1, flag=0):
     '''
@@ -168,18 +191,23 @@ def wait_until(template, timeout=10, interval=1, flag=0):
     import random
     from datetime import datetime
 
-    pos_body = get_window_pos(find_window(title))
+    if type(template) == str:
+        template = cv2.imread(template)
+
+    pos_body = get_window_pos(find_window(get_title()))
 
     begin_time = datetime.now()
     while True:
-        resource = get_screenshot(title)
+        resource = get_screenshot(get_title())
 
-        print("Matching...")
+        # print("Matching...")
+        logging.info("Matching...")
         pos = match(resource, template)
         if len(pos) > 0:
             pos = pos[random.randint(0, len(pos) - 1)]
 
-            print("Matched")
+            # print("Matched")
+            logging.info("Matched.")
             if flag == 0:
                 p = Point(int(pos.x + 0.5 * pos.width),
                           int(pos.y + 0.5 * pos.height))
@@ -190,6 +218,39 @@ def wait_until(template, timeout=10, interval=1, flag=0):
         end_time = datetime.now()
         time.sleep(interval)
         if (end_time - begin_time).seconds >= timeout:
-            break
+            raise TimeoutError("Match process timeout.")
 
     return None
+
+
+def offset_position(p, offset):
+    if type(offset) == tuple:
+        return p+Point(offset[0], offset[1])
+    elif type(offset) == Point:
+        return p+Point(offset.x, offset.y)
+
+
+def random_position(p, offset):
+    return p + Point(random.randint(-offset, offset),
+                     random.randint(-offset, offset))
+
+
+def random_time(t, offset):
+    return t + random.uniform(-offset, offset)
+
+
+def random_sleep(t, offset):
+    return time.sleep(random_time(t, offset))
+
+
+def random_click(p, offset):
+    return click(random_position(p, offset))
+
+
+def position_relative(x, y):
+    pos_window = get_window_pos(find_window(get_title))
+    p = Point(int(pos_window.x +
+                  pos_window.width * x),
+              int(pos_window.y +
+                  pos_window.height * y))
+    return p

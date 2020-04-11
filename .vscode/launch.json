@@ -8,8 +8,8 @@
             "name": "run in powershell",
             "type": "PowerShell",
             "request": "launch",
-            "script": "${workspaceFolder}\\onmyoji.ps1",
-            "cwd": "${file}"
+            "script": "${workspaceFolder}\\start.ps1",
+            "cwd": "${workspaceFolder}"
         },
         {
             "name": "gui",
