@@ -8,6 +8,22 @@ def main_process(times=1, time_used=35):
 
     img_dir = os.path.join(__file__, "..", "img")
 
+    while True:
+        p = u.wait_until(os.path.join(img_dir, "1.png"))
+        if p != None:
+            u.random_click(p, 5)
+        u.random_sleep(1, 0.3)
+
+        p = u.wait_until(os.path.join(img_dir, "2.png"))
+        if p != None:
+            u.random_click(p, 5)
+        u.random_sleep(1, 0.3)
+
+        p = u.wait_until(os.path.join(img_dir, "3.png"))
+        if p != None:
+            u.random_click(p, 5)
+        u.random_sleep(1, 0.3)
+
     for i in range(times):
         logging.info("Start for times: " + str(i + 1) + ".")
 
@@ -24,4 +40,4 @@ def main_process(times=1, time_used=35):
         p = u.offset_position(p, (300, 0))
         u.random_click(p, 20)
 
-        u.random_sleep(time_used+10, 0.3)
+        u.random_sleep(time_used+15, 0.3)

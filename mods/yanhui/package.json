@@ -1,6 +1,6 @@
 {
-    "name": "yuling",
-    "text": "御灵",
+    "name": "yanhui",
+    "text": "宴会",
     "version": "0.1",
     "params": [
         {
@@ -11,7 +11,7 @@
         },
         {
             "param": "time_uesd",
-            "text": "通关时间",
+            "text": "消耗时间",
             "param_t": "int",
             "default": 35
         }

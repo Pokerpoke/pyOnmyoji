@@ -1,2 +1,1 @@
-Start-Process powershell -verb runas -ArgumentList"-file fullpathofthescript"
-python ui.py
+Start-Process python .\ui.py -Verb runAs 

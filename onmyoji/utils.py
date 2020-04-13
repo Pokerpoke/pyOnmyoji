@@ -12,6 +12,7 @@ import os
 import numpy as np
 import random
 import logging
+from datetime import datetime
 from PIL import Image
 
 
@@ -20,7 +21,7 @@ def get_title():
 
 
 def get_background():
-    return os.environ.get("YYS_BACKGROUND")
+    return os.environ.get("YYS_BACKGROUND") == "True"
 
 
 class Pos(object):
@@ -64,7 +65,7 @@ def click(p):
     if p == None:
         return
 
-    if background == "True":
+    if background:
         window_handle = win32gui.FindWindow(None, get_title())
 
         pos_body = get_window_pos(window_handle)
@@ -95,24 +96,30 @@ def find_window(title):
 
 
 def get_window_pos(window_handle):
-    def get_window_rect(hwnd):
-        import ctypes
-        import ctypes.wintypes
+    # def get_window_rect(hwnd):
+    #     import ctypes
+    #     import ctypes.wintypes
 
-        try:
-            f = ctypes.windll.dwmapi.DwmGetWindowAttribute
-        except WindowsError:
-            f = None
-        if f:
-            rect = ctypes.wintypes.RECT()
-            DWMWA_EXTENDED_FRAME_BOUNDS = 9
-            f(ctypes.wintypes.HWND(hwnd),
-              ctypes.wintypes.DWORD(DWMWA_EXTENDED_FRAME_BOUNDS),
-              ctypes.byref(rect),
-              ctypes.sizeof(rect))
-            return rect.left, rect.top, rect.right, rect.bottom
+    #     try:
+    #         f = ctypes.windll.dwmapi.DwmGetWindowAttribute
+    #     except WindowsError:
+    #         f = None
+    #     if f:
+    #         rect = ctypes.wintypes.RECT()
+    #         DWMWA_EXTENDED_FRAME_BOUNDS = 9
+    #         f(ctypes.wintypes.HWND(hwnd),
+    #           ctypes.wintypes.DWORD(DWMWA_EXTENDED_FRAME_BOUNDS),
+    #           ctypes.byref(rect),
+    #           ctypes.sizeof(rect))
+    #         return rect.left, rect.top, rect.right, rect.bottom
+    #
+    # (x, y, w, h) = get_window_rect(window_handle)
 
-    (x, y, w, h) = get_window_rect(window_handle)
+    rect = win32gui.GetWindowRect(find_window(get_title()))
+    x = rect[0]
+    y = rect[1]
+    w = rect[2] - x
+    h = rect[3] - y
     pos = Pos(x, y, w, h)
 
     return pos
@@ -168,18 +175,25 @@ def match(img_rgb, template_rgb, show_result=False):
     return pos
 
 
-def exists(template_path, timeout=10, interval=1, flag=0):
+def exists(template, flag=0):
     if type(template) == str:
         template = cv2.imread(template)
 
+    pos_body = get_window_pos(find_window(get_title()))
     resource = get_screenshot(get_title())
     pos = match(resource, template)
+    if len(pos) > 0:
+        pos = pos[random.randint(0, len(pos) - 1)]
 
-    if len(pos) == 1:
-        return pos
-    elif len(pos) > 1:
-        return pos[-1]
+        logging.info("Existed")
+        if flag == 0:
+            p = Point(int(pos.x + 0.5 * pos.width),
+                      int(pos.y + 0.5 * pos.height))
+            p = Point(pos_body.x + p.x,
+                      pos_body.y + p.y)
+        return p
     else:
+        logging.info("Not existed.")
         return None
 
 
@@ -187,10 +201,6 @@ def wait_until(template, timeout=10, interval=1, flag=0):
     '''
     flag 0 -> center
     '''
-    import time
-    import random
-    from datetime import datetime
-
     if type(template) == str:
         template = cv2.imread(template)
 
@@ -200,13 +210,11 @@ def wait_until(template, timeout=10, interval=1, flag=0):
     while True:
         resource = get_screenshot(get_title())
 
-        # print("Matching...")
         logging.info("Matching...")
         pos = match(resource, template)
         if len(pos) > 0:
             pos = pos[random.randint(0, len(pos) - 1)]
 
-            # print("Matched")
             logging.info("Matched.")
             if flag == 0:
                 p = Point(int(pos.x + 0.5 * pos.width),
@@ -248,9 +256,17 @@ def random_click(p, offset):
 
 
 def position_relative(x, y):
-    pos_window = get_window_pos(find_window(get_title))
+    pos_window = get_window_pos(find_window(get_title()))
     p = Point(int(pos_window.x +
                   pos_window.width * x),
               int(pos_window.y +
                   pos_window.height * y))
     return p
+
+
+def set_foreround_window(title):
+    YYS_TITLE = os.environ.get("YYS_TITLE")
+
+    handle = find_window(YYS_TITLE)
+    win32gui.ShowWindow(handle, win32con.SW_RESTORE)
+    win32gui.SetForegroundWindow(handle)

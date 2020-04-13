@@ -10,6 +10,8 @@ def main_process(type=0):
     import os
     import logging
 
+    # type = 1
+
     resource_path = os.path.join(os.environ.get(
         "YYS_MODS_PATH"), "match_test", "img", "resource.png")
     template_path = os.path.join(os.environ.get(

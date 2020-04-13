@@ -1,5 +1,13 @@
 {
     "name": "baiguiyexing",
     "text": "百鬼夜行",
-    "version": "0.1"
+    "version": "0.1",
+    "params": [
+        {
+            "param": "times",
+            "text": "次数",
+            "parm_t": "int",
+            "default": 3
+        }
+    ]
 }

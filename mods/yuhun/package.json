@@ -1,4 +1,19 @@
 {
     "name": "yuhun",
-    "version": "0.1"
+    "text": "御魂（单人）",
+    "version": "0.1",
+    "params": [
+        {
+            "param": "times",
+            "text": "次数",
+            "param_t": "int",
+            "default": 1
+        },
+        {
+            "param": "time_used",
+            "text": "通关时间",
+            "param_t": "int",
+            "default": 35
+        }
+    ]
 }

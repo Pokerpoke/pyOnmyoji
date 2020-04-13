@@ -7,10 +7,11 @@ import os
 import json
 import importlib
 import logging
-from functools import partial
-from onmyoji import utils as u
 import win32gui
 import win32con
+import multiprocessing
+from functools import partial
+from onmyoji import utils as u
 
 logging.basicConfig(format='%(levelname)s: %(message)s', level=logging.INFO)
 
@@ -20,8 +21,10 @@ window.title("Onmyoji Assert")
 YYS_TITLE = "阴阳师-网易游戏"
 YYS_WORKSPACE_PATH = os.getcwd()
 YYS_MODS_PATH = os.path.join(YYS_WORKSPACE_PATH, "mods")
-YYS_BACKGROUND = "True"
+YYS_BACKGROUND = "False"
 # YYS_BACKGROUND = "False"
+
+CURRENT_MOD = None
 
 os.environ["YYS_WORKSPACE_PATH"] = YYS_WORKSPACE_PATH
 os.environ["YYS_MODS_PATH"] = YYS_MODS_PATH
@@ -29,12 +32,11 @@ os.environ["YYS_TITLE"] = YYS_TITLE
 os.environ["YYS_BACKGROUND"] = YYS_BACKGROUND
 
 
+var_background = tk.IntVar()
+
+
 def init():
-    if YYS_BACKGROUND == "False":
-        handle = u.find_window(YYS_TITLE)
-        win32gui.ShowWindow(handle, win32con.SW_RESTORE)
-        win32gui.SetForegroundWindow(handle)
-        pos_window = u.get_window_pos(handle)
+    pass
 
 
 def center_window(w, h):
@@ -102,7 +104,7 @@ def generate_mods_button():
 
             tk.Button(mod_frame, text="开始",
                       command=partial(button_clicked, mod.main_process,
-                                      entries, param_t
+                                      entries, param_t, mod_name=mod_name
                                       )).grid(row=row_idx, column=col_idx)
         else:
             tk.Button(mod_frame, text="开始",
@@ -112,14 +114,46 @@ def generate_mods_button():
         row_idx = row_idx + 1
 
 
-def button_clicked(func, entries, param_t):
+def button_clicked(func, entries, param_t, mod_name):
+    global CURRENT_MOD
+
     params = []
     for entry, t in zip(entries, param_t):
         if t == "int":
             params.append(int(entry.get()))
         elif t == "str":
             params.append(str(entry.get()))
+
     func(*params)
+
+    # if CURRENT_MOD == None:
+    #     process = multiprocessing.Process(target=func, args=(*params,))
+    #     CURRENT_MOD = process
+    #     process.start()
+    # else:
+    #     logging.warning("Another mod is running, please stop it.")
+
+
+def set_background():
+    global var_background
+
+    if var_background.get() == 1:
+        logging.info("Run in background.")
+        os.environ["YYS_BACKGROUND"] = "True"
+    else:
+        logging.info("Run in foreground.")
+        os.environ["YYS_BACKGROUND"] = "False"
+
+
+def stop_current_process():
+    global CURRENT_MOD
+
+    if CURRENT_MOD != None:
+        CURRENT_MOD.terminate()
+        logging.info("Stopped.")
+        CURRENT_MOD = None
+    else:
+        logging.info("No mod is running.")
 
 
 def main():
@@ -127,7 +161,12 @@ def main():
 
     center_window(500, 500)
 
+    tk.Checkbutton(window, text="后台运行", variable=var_background,
+                   onvalue=1, offvalue=0, command=set_background).pack()
+
     generate_mods_button()
+
+    tk.Button(window, text="停止", command=stop_current_process).pack()
 
 
 main()
