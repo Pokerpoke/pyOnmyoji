@@ -5,7 +5,7 @@ import logging
 from .utils import *
 
 
-cur_path = os.path.join(os.environ.get("YYS_WORKSPACE_PATH"), "onmyoji")
+cur_path = os.path.join(os.environ.get("GAME_WORKSPACE_PATH"), "onmyoji")
 
 
 def current_scene():

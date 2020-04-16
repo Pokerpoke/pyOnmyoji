@@ -9,34 +9,56 @@ import importlib
 import logging
 import win32gui
 import win32con
-import multiprocessing
+import threading
+import inspect
+import ctypes
 from functools import partial
 from onmyoji import utils as u
 
-logging.basicConfig(format='%(levelname)s: %(message)s', level=logging.INFO)
+# logging.basicConfig(format='%(levelname)s: %(message)s', level=logging.DEBUG)
 
 window = tk.Tk()
-window.title("Onmyoji Assert")
+window.title("UI")
 
-YYS_TITLE = "阴阳师-网易游戏"
-YYS_WORKSPACE_PATH = os.getcwd()
-YYS_MODS_PATH = os.path.join(YYS_WORKSPACE_PATH, "mods")
-YYS_BACKGROUND = "False"
-# YYS_BACKGROUND = "False"
+GAME_TITLE = "阴阳师-网易游戏"
+GAME_WORKSPACE_PATH = os.getcwd()
+GAME_MODS_PATH = os.path.join(GAME_WORKSPACE_PATH, "mods")
+GAME_BACKGROUND = "False"
+# GAME_BACKGROUND = "True"
 
 CURRENT_MOD = None
 
-os.environ["YYS_WORKSPACE_PATH"] = YYS_WORKSPACE_PATH
-os.environ["YYS_MODS_PATH"] = YYS_MODS_PATH
-os.environ["YYS_TITLE"] = YYS_TITLE
-os.environ["YYS_BACKGROUND"] = YYS_BACKGROUND
+os.environ["GAME_WORKSPACE_PATH"] = GAME_WORKSPACE_PATH
+os.environ["GAME_MODS_PATH"] = GAME_MODS_PATH
+os.environ["GAME_TITLE"] = GAME_TITLE
+os.environ["GAME_BACKGROUND"] = GAME_BACKGROUND
 
 
-var_background = tk.IntVar()
+var_background = tk.BooleanVar()
+var_background.set(GAME_BACKGROUND == "True")
+
+var_debug = tk.BooleanVar()
+var_debug.set(True)
+
+
+def set_debug():
+    global var_debug
+
+    if var_debug.get() == True:
+        logging.basicConfig(
+            format="[%(asctime)s]: %(levelname)s - %(message)s",
+            datefmt='%Y-%m-%d %H:%M:%S',
+            level=logging.DEBUG)
+    else:
+        logging.basicConfig(
+            format="[%(asctime)s]: %(levelname)s - %(message)s",
+            datefmt='%Y-%m-%d %H:%M:%S',
+            level=logging.INFO)
 
 
 def init():
-    pass
+    set_debug()
+    center_window(500, 500)
 
 
 def center_window(w, h):
@@ -49,7 +71,7 @@ def center_window(w, h):
     window.geometry('%dx%d+%d+%d' % (w, h, x, y))
 
 
-def get_mods_list(path=YYS_MODS_PATH):
+def get_mods_list(path=GAME_MODS_PATH):
     return os.listdir(path)
 
 
@@ -62,7 +84,7 @@ def generate_mods_button():
         mod_frame = tk.Frame(window)
         mod_frame.pack()
 
-        info_path = os.path.join(YYS_MODS_PATH, mod_name, "package.json")
+        info_path = os.path.join(GAME_MODS_PATH, mod_name, "package.json")
 
         mod = importlib.import_module("mods."+mod_name+".process")
 
@@ -114,6 +136,25 @@ def generate_mods_button():
         row_idx = row_idx + 1
 
 
+def _async_raise(tid, exectype):
+    """raises the exception, performs cleanup if needed"""
+    if not inspect.isclass(exectype):
+        exectype = type(exectype)
+    res = ctypes.pythonapi.PyThreadState_SetAsyncExc(
+        tid, ctypes.py_object(exectype))
+    if res == 0:
+        raise ValueError("invalid thread id")
+    elif res != 1:
+        # """if it returns a number greater than one, you're in trouble,
+        # and you should call it again with exc=NULL to revert the effect"""
+        ctypes.pythonapi.PyThreadState_SetAsyncExc(tid, None)
+        raise SystemError("PyThreadState_SetAsyncExc failed")
+
+
+def stop_thread(thread):
+    _async_raise(thread.ident, SystemExit)
+
+
 def button_clicked(func, entries, param_t, mod_name):
     global CURRENT_MOD
 
@@ -123,13 +164,17 @@ def button_clicked(func, entries, param_t, mod_name):
             params.append(int(entry.get()))
         elif t == "str":
             params.append(str(entry.get()))
+        elif t == "float":
+            params.append(float(entry.get()))
 
-    func(*params)
+    CURRENT_MOD = threading.Thread(target=func, args=(*params,))
+    CURRENT_MOD.setDaemon(True)
+    CURRENT_MOD.start()
 
     # if CURRENT_MOD == None:
-    #     process = multiprocessing.Process(target=func, args=(*params,))
-    #     CURRENT_MOD = process
-    #     process.start()
+    #     CURRENT_MOD = threading.Thread(target=func, args=(*params,))
+    #     CURRENT_MOD.setDaemon(True)
+    #     CURRENT_MOD.start()
     # else:
     #     logging.warning("Another mod is running, please stop it.")
 
@@ -137,19 +182,19 @@ def button_clicked(func, entries, param_t, mod_name):
 def set_background():
     global var_background
 
-    if var_background.get() == 1:
+    if var_background.get() == True:
         logging.info("Run in background.")
-        os.environ["YYS_BACKGROUND"] = "True"
+        os.environ["GAME_BACKGROUND"] = "True"
     else:
         logging.info("Run in foreground.")
-        os.environ["YYS_BACKGROUND"] = "False"
+        os.environ["GAME_BACKGROUND"] = "False"
 
 
-def stop_current_process():
+def stop_current_mod():
     global CURRENT_MOD
 
     if CURRENT_MOD != None:
-        CURRENT_MOD.terminate()
+        stop_thread(thread=CURRENT_MOD)
         logging.info("Stopped.")
         CURRENT_MOD = None
     else:
@@ -159,14 +204,14 @@ def stop_current_process():
 def main():
     init()
 
-    center_window(500, 500)
-
     tk.Checkbutton(window, text="后台运行", variable=var_background,
-                   onvalue=1, offvalue=0, command=set_background).pack()
+                   command=set_background).pack()
+    tk.Checkbutton(window, text="调试", variable=var_background,
+                   command=set_debug).pack()
 
     generate_mods_button()
 
-    tk.Button(window, text="停止", command=stop_current_process).pack()
+    tk.Button(window, text="停止", command=stop_current_mod).pack()
 
 
 main()

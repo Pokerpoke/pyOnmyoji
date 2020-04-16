@@ -1,13 +1,13 @@
 {
-    "name": "baiguiyexing",
-    "text": "百鬼夜行",
+    "name": "wan_shi_wu",
+    "text": "万事屋",
     "version": "0.1",
     "params": [
         {
             "param": "times",
             "text": "次数",
-            "param_t": "int",
-            "default": 3
+            "input_int": "times",
+            "default": 1
         }
     ]
 }

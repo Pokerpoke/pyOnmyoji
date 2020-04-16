@@ -1,4 +1,4 @@
-def main_process(type=0):
+def main_process(thresold=0.7, type=0):
     '''
     0 - screen shot
     1 - file
@@ -13,9 +13,9 @@ def main_process(type=0):
     # type = 1
 
     resource_path = os.path.join(os.environ.get(
-        "YYS_MODS_PATH"), "match_test", "img", "resource.png")
+        "GAME_MODS_PATH"), "match_test", "img", "resource.png")
     template_path = os.path.join(os.environ.get(
-        "YYS_MODS_PATH"), "match_test", "img", "template.png")
+        "GAME_MODS_PATH"), "match_test", "img", "template.png")
 
     if type == 0:
         resource = u.get_screenshot(u.get_title())
@@ -25,4 +25,6 @@ def main_process(type=0):
     template = cv2.imread(template_path)
 
     logging.info("Match.")
-    u.match(resource, template, show_result=True)
+    pos = u.match(resource, template, show_result=True, thresold=thresold)
+    for p in pos:
+        print("("+str(p.x)+", "+str(p.y)+")")

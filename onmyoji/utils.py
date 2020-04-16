@@ -11,17 +11,18 @@ import random
 import os
 import numpy as np
 import random
+import math
 import logging
 from datetime import datetime
 from PIL import Image
 
 
 def get_title():
-    return os.environ.get("YYS_TITLE")
+    return os.environ.get("GAME_TITLE")
 
 
 def get_background():
-    return os.environ.get("YYS_BACKGROUND") == "True"
+    return os.environ.get("GAME_BACKGROUND") == "True"
 
 
 class Pos(object):
@@ -56,8 +57,51 @@ class Point(object):
             return False
 
 
-def move(p):
-    win32api.SetCursorPos((p.x, p.y))
+def move(p, continuous=False, interval=0.1):
+    if continuous:
+        pass
+    else:
+        win32api.SetCursorPos((int(p.x), int(p.y)))
+
+
+def distance(x, y):
+    return math.sqrt((y.y-x.y)*(y.y-x.y)+(y.x-x.x)*(y.x-x.x))
+
+
+def slide(p_src, p_des, v=1,  duration=None, interval=0.01, release=True):
+    """
+    Slide from src to des.
+    """
+    if duration == None:
+        duration = random.uniform(0.3, 0.5)
+
+    if get_background():
+        # current_pos = win32api.GetCursorPos()
+        pass
+    else:
+        x = p_src.x
+        y = p_src.y
+        d = distance(p_src, p_des)
+        v = d/duration
+        d_x = p_des.x - p_src.x
+        d_y = p_des.y - p_src.y
+        v_x = v * d_x / d
+        v_y = v * d_y / d
+
+        p_cur = Point(x, y)
+        p_next = Point()
+
+        move(p_cur)
+        win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0)
+        t = int(duration / interval)
+        for _ in range(t):
+            p_next.x = p_cur.x + v_x*interval
+            p_next.y = p_cur.y + v_y*interval
+            move(p_next)
+            p_cur = p_next
+            time.sleep(interval)
+        if release:
+            win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP, 0, 0, 0, 0)
 
 
 def click(p):
@@ -88,6 +132,7 @@ def click(p):
         win32api.SetCursorPos((x, y))
         win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN, x, y, 0, 0)
         win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP, x, y, 0, 0)
+    logging.debug("Click ("+str(p.x)+", "+str(p.y)+")")
 
 
 def find_window(title):
@@ -96,25 +141,6 @@ def find_window(title):
 
 
 def get_window_pos(window_handle):
-    # def get_window_rect(hwnd):
-    #     import ctypes
-    #     import ctypes.wintypes
-
-    #     try:
-    #         f = ctypes.windll.dwmapi.DwmGetWindowAttribute
-    #     except WindowsError:
-    #         f = None
-    #     if f:
-    #         rect = ctypes.wintypes.RECT()
-    #         DWMWA_EXTENDED_FRAME_BOUNDS = 9
-    #         f(ctypes.wintypes.HWND(hwnd),
-    #           ctypes.wintypes.DWORD(DWMWA_EXTENDED_FRAME_BOUNDS),
-    #           ctypes.byref(rect),
-    #           ctypes.sizeof(rect))
-    #         return rect.left, rect.top, rect.right, rect.bottom
-    #
-    # (x, y, w, h) = get_window_rect(window_handle)
-
     rect = win32gui.GetWindowRect(find_window(get_title()))
     x = rect[0]
     y = rect[1]
@@ -154,13 +180,13 @@ def get_screenshot(title, filename=None):
     return res
 
 
-def match(img_rgb, template_rgb, show_result=False):
+def match(img_rgb, template_rgb, show_result=False, thresold=0.7):
     img_gray = cv2.cvtColor(img_rgb, cv2.COLOR_BGR2GRAY)
     template_gray = cv2.cvtColor(template_rgb, cv2.COLOR_BGR2GRAY)
     w, h = template_gray.shape[::-1]
 
     res = cv2.matchTemplate(img_gray, template_gray, cv2.TM_CCOEFF_NORMED)
-    thresold = 0.7
+    thresold = thresold
     loc = np.where(res >= thresold)
     pos = []
     for pt in zip(*loc[::-1]):
@@ -175,17 +201,17 @@ def match(img_rgb, template_rgb, show_result=False):
     return pos
 
 
-def exists(template, flag=0):
+def exists(template, flag=0, thresold=0.7):
     if type(template) == str:
         template = cv2.imread(template)
 
     pos_body = get_window_pos(find_window(get_title()))
     resource = get_screenshot(get_title())
-    pos = match(resource, template)
+    pos = match(resource, template, thresold=thresold)
     if len(pos) > 0:
         pos = pos[random.randint(0, len(pos) - 1)]
 
-        logging.info("Existed")
+        logging.debug("Existed")
         if flag == 0:
             p = Point(int(pos.x + 0.5 * pos.width),
                       int(pos.y + 0.5 * pos.height))
@@ -193,11 +219,11 @@ def exists(template, flag=0):
                       pos_body.y + p.y)
         return p
     else:
-        logging.info("Not existed.")
+        logging.debug("Not existed.")
         return None
 
 
-def wait_until(template, timeout=10, interval=1, flag=0):
+def wait_until(template, timeout=10, interval=1, flag=0, thresold=0.7):
     '''
     flag 0 -> center
     '''
@@ -210,12 +236,12 @@ def wait_until(template, timeout=10, interval=1, flag=0):
     while True:
         resource = get_screenshot(get_title())
 
-        logging.info("Matching...")
-        pos = match(resource, template)
+        logging.debug("Matching...")
+        pos = match(resource, template, thresold=thresold)
         if len(pos) > 0:
             pos = pos[random.randint(0, len(pos) - 1)]
 
-            logging.info("Matched.")
+            logging.debug("Matched.")
             if flag == 0:
                 p = Point(int(pos.x + 0.5 * pos.width),
                           int(pos.y + 0.5 * pos.height))
@@ -265,8 +291,8 @@ def position_relative(x, y):
 
 
 def set_foreround_window(title):
-    YYS_TITLE = os.environ.get("YYS_TITLE")
+    GAME_TITLE = os.environ.get("GAME_TITLE")
 
-    handle = find_window(YYS_TITLE)
+    handle = find_window(GAME_TITLE)
     win32gui.ShowWindow(handle, win32con.SW_RESTORE)
     win32gui.SetForegroundWindow(handle)
