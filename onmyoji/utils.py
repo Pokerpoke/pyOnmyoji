@@ -75,22 +75,49 @@ def slide(p_src, p_des, v=1,  duration=None, interval=0.01, release=True):
     if duration == None:
         duration = random.uniform(0.3, 0.5)
 
+    x = p_src.x
+    y = p_src.y
+    d = distance(p_src, p_des)
+    v = d/duration
+    d_x = p_des.x - p_src.x
+    d_y = p_des.y - p_src.y
+    v_x = v * d_x / d
+    v_y = v * d_y / d
+
+    p_cur = Point(x, y)
+    p_next = Point()
+
     if get_background():
-        # current_pos = win32api.GetCursorPos()
-        pass
+        window_handle = find_window(get_title())
+
+        pos_body = get_window_pos(window_handle)
+
+        p_cur.x = p_cur.x - pos_body.x
+        p_cur.y = p_cur.y - pos_body.y
+
+        long_position = win32api.MAKELONG(p_cur.x, p_cur.y)  # 模拟鼠标指针 传送到指定坐标
+        win32gui.SendMessage(
+            window_handle, win32con.WM_MOUSEMOVE, 0, long_position)
+        win32gui.PostMessage(
+            window_handle, win32con.WM_LBUTTONDOWN, 0, long_position)  # 模拟鼠标按下
+
+        t = int(duration / interval)
+        for _ in range(t):
+            p_next.x = p_cur.x + v_x*interval
+            p_next.y = p_cur.y + v_y*interval
+            long_position = win32api.MAKELONG(
+                int(p_next.x), int(p_next.y))  # 模拟鼠标指针 传送到指定坐标
+            win32gui.SendMessage(
+                window_handle, win32con.WM_MOUSEMOVE, 0, long_position)
+            p_cur = p_next
+            time.sleep(interval)
+
+        if release:
+            long_position = win32api.MAKELONG(
+                int(p_next.x), int(p_next.y))  # 模拟鼠标指针 传送到指定坐标
+            win32gui.SendMessage(
+                window_handle, win32con.WM_LBUTTONUP, 0, long_position)  # 模拟鼠标弹起
     else:
-        x = p_src.x
-        y = p_src.y
-        d = distance(p_src, p_des)
-        v = d/duration
-        d_x = p_des.x - p_src.x
-        d_y = p_des.y - p_src.y
-        v_x = v * d_x / d
-        v_y = v * d_y / d
-
-        p_cur = Point(x, y)
-        p_next = Point()
-
         move(p_cur)
         win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0)
         t = int(duration / interval)
@@ -110,7 +137,7 @@ def click(p):
         return
 
     if background:
-        window_handle = win32gui.FindWindow(None, get_title())
+        window_handle = find_window(get_title())
 
         pos_body = get_window_pos(window_handle)
 
@@ -131,6 +158,7 @@ def click(p):
 
         win32api.SetCursorPos((x, y))
         win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN, x, y, 0, 0)
+        time.sleep(random.randint(20, 80)/1000)
         win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP, x, y, 0, 0)
     logging.debug("Click ("+str(p.x)+", "+str(p.y)+")")
 
@@ -177,6 +205,11 @@ def get_screenshot(title, filename=None):
                               (bmpinfo['bmWidth'], bmpinfo['bmHeight']),
                               bmpstr, 'raw', 'BGRX', 0, 1)
     res = cv2.cvtColor(np.asarray(im_PIL), cv2.COLOR_RGB2BGR)
+
+    saveDC.DeleteDC()
+    mfcDC.DeleteDC()
+    win32gui.DeleteObject(saveBitMap.GetHandle())
+    win32gui.ReleaseDC(handle, hwndDC)
     return res
 
 

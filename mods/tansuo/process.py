@@ -13,8 +13,6 @@ def main_process(times=1, time_used=10):
     sys.path.append(mod_path)
     import huan_gou_liang.process
 
-    # huan_gou_liang = importlib.import_module("../huan_gou_liang.process")
-
     LOCKED = False
 
     img_dir = os.path.join(__file__, "..", "img")
@@ -106,7 +104,7 @@ def main_process(times=1, time_used=10):
             logging.info("Search for sheng_li.png.")
             p = u.wait_until(os.path.join(img_dir, "sheng_li.png"),
                              timeout=time_used+15, interval=0.2)
-            u.random_sleep(1, 0.1)
+            u.random_sleep(1, 0.2)
             p = u.offset_position(p, (300, 300))
             u.random_click(p, 20)
             u.random_sleep(2, 0.3)

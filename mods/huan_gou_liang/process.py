@@ -52,7 +52,7 @@ def main_process(times=1, time_used=7):
     logging.info("Search for fan_hui.png")
     p = u.wait_until(os.path.join(img_dir, "fan_hui.png"))
     u.random_sleep(1, 0.2)
-    u.random_click(p, 20)
+    u.random_click(p, 10)
     u.random_sleep(1, 0.2)
 
     logging.info("Finished.")

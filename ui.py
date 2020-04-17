@@ -23,8 +23,8 @@ window.title("UI")
 GAME_TITLE = "阴阳师-网易游戏"
 GAME_WORKSPACE_PATH = os.getcwd()
 GAME_MODS_PATH = os.path.join(GAME_WORKSPACE_PATH, "mods")
-GAME_BACKGROUND = "False"
-# GAME_BACKGROUND = "True"
+# GAME_BACKGROUND = "False"
+GAME_BACKGROUND = "True"
 
 CURRENT_MOD = None
 
@@ -206,7 +206,7 @@ def main():
 
     tk.Checkbutton(window, text="后台运行", variable=var_background,
                    command=set_background).pack()
-    tk.Checkbutton(window, text="调试", variable=var_background,
+    tk.Checkbutton(window, text="调试", variable=var_debug,
                    command=set_debug).pack()
 
     generate_mods_button()

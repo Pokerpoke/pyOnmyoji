@@ -30,11 +30,7 @@ def main_process(times=1, time_used=7):
             u.random_click(p, 20)
             u.random_sleep(1, 0.2)
 
-        if win32api.GetAsyncKeyState(win32con.VK_LCONTROL) and win32api.GetAsyncKeyState(ord("Q")):
-            logging.info("Stopped by user.")
-            break
-
-        time.sleep(1)
+        time.sleep(2)
 
     # for i in range(times):
     #     logging.info("Start for times: "+str(i + 1)+".")
