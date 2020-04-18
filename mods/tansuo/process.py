@@ -110,7 +110,8 @@ def main_process(times=1, time_used=10):
             u.random_sleep(2, 0.3)
             # get rewards
             logging.info("Search for jie_suan.png.")
-            p = u.wait_until(os.path.join(img_dir, "jie_suan.png"))
+            p = u.wait_until(os.path.join(
+                img_dir, "jie_suan.png"), interval=0.2)
             u.random_sleep(2, 0.1)
             p = u.offset_position(p, (300, 0))
             u.random_click(p, 20)

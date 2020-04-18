@@ -1,5 +1,8 @@
 {
     "cmake.configureOnOpen": false,
     "python.linting.enabled": true,
-    "terminal.integrated.detectLocale": "off"
+    "terminal.integrated.detectLocale": "off",
+    "python.linting.pylintArgs": [
+        "--extension-pkg-whitelist=cv2,win32gui,win32ui,win32api"
+    ]
 }

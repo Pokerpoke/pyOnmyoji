@@ -1,8 +1,6 @@
 # -*- coding: UTF-8 -*-
 
 import tkinter as tk
-import tkinter.messagebox
-import onmyoji
 import os
 import json
 import importlib
@@ -14,6 +12,7 @@ import inspect
 import ctypes
 from functools import partial
 from onmyoji import utils as u
+from memory_profiler import profile
 
 # logging.basicConfig(format='%(levelname)s: %(message)s', level=logging.DEBUG)
 
@@ -25,6 +24,8 @@ GAME_WORKSPACE_PATH = os.getcwd()
 GAME_MODS_PATH = os.path.join(GAME_WORKSPACE_PATH, "mods")
 # GAME_BACKGROUND = "False"
 GAME_BACKGROUND = "True"
+GAME_LOG_FILE = os.path.join(GAME_WORKSPACE_PATH, "log", "game.log")
+GAME_MEM_LOG_FILE = os.path.join(GAME_WORKSPACE_PATH, "log", "game_mem.log")
 
 CURRENT_MOD = None
 
@@ -32,6 +33,8 @@ os.environ["GAME_WORKSPACE_PATH"] = GAME_WORKSPACE_PATH
 os.environ["GAME_MODS_PATH"] = GAME_MODS_PATH
 os.environ["GAME_TITLE"] = GAME_TITLE
 os.environ["GAME_BACKGROUND"] = GAME_BACKGROUND
+os.environ["GAME_LOG_FILE"] = GAME_LOG_FILE
+os.environ["GAME_MEM_LOG_FILE"] = GAME_MEM_LOG_FILE
 
 
 var_background = tk.BooleanVar()
@@ -43,17 +46,26 @@ var_debug.set(True)
 
 def set_debug():
     global var_debug
+    global GAME_LOG_FILE
 
     if var_debug.get() == True:
         logging.basicConfig(
             format="[%(asctime)s]: %(levelname)s - %(message)s",
             datefmt='%Y-%m-%d %H:%M:%S',
-            level=logging.DEBUG)
+            level=logging.DEBUG,
+            handlers=[
+                logging.FileHandler(GAME_LOG_FILE),
+                logging.StreamHandler()
+            ])
     else:
         logging.basicConfig(
             format="[%(asctime)s]: %(levelname)s - %(message)s",
             datefmt='%Y-%m-%d %H:%M:%S',
-            level=logging.INFO)
+            level=logging.INFO,
+            handlers=[
+                logging.FileHandler(GAME_LOG_FILE),
+                logging.StreamHandler()
+            ])
 
 
 def init():
