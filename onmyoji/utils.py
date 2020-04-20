@@ -195,6 +195,7 @@ def get_screenshot(title, filename=None):
     saveDC.SelectObject(saveBitMap)
     # 截取从左上角（0，0）长宽为（w，h）的图片
     saveDC.BitBlt((0, 0), (w, h), mfcDC, (0, 0), win32con.SRCCOPY)
+
     if filename != None:
         saveBitMap.SaveBitmapFile(saveDC, filename)
 
@@ -202,10 +203,12 @@ def get_screenshot(title, filename=None):
     bmpstr = saveBitMap.GetBitmapBits(True)
     # 生成图像
     im_PIL = Image.frombuffer('RGB',
-                              (bmpinfo['bmWidth'], bmpinfo['bmHeight']),
-                              bmpstr, 'raw', 'BGRX', 0, 1)
+                              (bmpinfo['bmWidth'],
+                               bmpinfo['bmHeight']),
+                              bmpstr, 'raw', 'BGRX')
     res = cv2.cvtColor(np.asarray(im_PIL), cv2.COLOR_RGB2BGR)
 
+    saveDC.SelectObject(saveBitMap)
     saveDC.DeleteDC()
     mfcDC.DeleteDC()
     win32gui.DeleteObject(saveBitMap.GetHandle())

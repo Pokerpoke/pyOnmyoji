@@ -1,5 +1,6 @@
 # -*- coding: UTF-8 -*-
 
+import sys
 import tkinter as tk
 import os
 import json
@@ -12,9 +13,6 @@ import inspect
 import ctypes
 from functools import partial
 from onmyoji import utils as u
-from memory_profiler import profile
-
-# logging.basicConfig(format='%(levelname)s: %(message)s', level=logging.DEBUG)
 
 window = tk.Tk()
 window.title("UI")
@@ -22,7 +20,6 @@ window.title("UI")
 GAME_TITLE = "阴阳师-网易游戏"
 GAME_WORKSPACE_PATH = os.getcwd()
 GAME_MODS_PATH = os.path.join(GAME_WORKSPACE_PATH, "mods")
-# GAME_BACKGROUND = "False"
 GAME_BACKGROUND = "True"
 GAME_LOG_FILE = os.path.join(GAME_WORKSPACE_PATH, "log", "game.log")
 GAME_MEM_LOG_FILE = os.path.join(GAME_WORKSPACE_PATH, "log", "game_mem.log")
@@ -42,6 +39,17 @@ var_background.set(GAME_BACKGROUND == "True")
 
 var_debug = tk.BooleanVar()
 var_debug.set(True)
+
+
+def check_admin():
+    try:
+        if ctypes.windll.shell32.IsUserAnAdmin():
+            pass
+        else:
+            ctypes.windll.shell32.ShellExecuteW(
+                None, "runas", sys.executable, __file__, None, 1)
+    except:
+        return False
 
 
 def set_debug():
@@ -214,6 +222,8 @@ def stop_current_mod():
 
 
 def main():
+    check_admin()
+
     init()
 
     tk.Checkbutton(window, text="后台运行", variable=var_background,

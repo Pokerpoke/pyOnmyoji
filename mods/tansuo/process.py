@@ -98,7 +98,7 @@ def main_process(times=1, time_used=10):
                 u.random_sleep(2, 0.5)
                 u.random_click(p, 10)
 
-            u.random_sleep(7, 0.5)
+            u.random_sleep(2, 0.5)
 
             # battle and win
             logging.info("Search for sheng_li.png.")
