@@ -12,7 +12,7 @@ def current_scene():
     '''
     0 - 庭院
     1 - 町中
-    2 - tan suo
+    2 - 探索
     '''
     global cur_path
 
@@ -42,6 +42,10 @@ def goto_scence(p):
 
 
 def goto_ting_yuan():
+    pass
+
+
+def lineup_locked():
     pass
 
 

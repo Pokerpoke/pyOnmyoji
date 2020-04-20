@@ -42,14 +42,15 @@ var_debug.set(True)
 
 
 def check_admin():
-    try:
-        if ctypes.windll.shell32.IsUserAnAdmin():
-            pass
-        else:
-            ctypes.windll.shell32.ShellExecuteW(
-                None, "runas", sys.executable, __file__, None, 1)
-    except:
-        return False
+    pass
+    # try:
+    #     if ctypes.windll.shell32.IsUserAnAdmin():
+    #         pass
+    #     else:
+    #         ctypes.windll.shell32.ShellExecuteW(
+    #             None, "runas", sys.executable, __file__, None, 1)
+    # except:
+    #     return False
 
 
 def set_debug():
