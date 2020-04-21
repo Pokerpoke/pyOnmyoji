@@ -1,17 +1,15 @@
-def main_process(times=1, time_used=10):
-    import sys
-    import os
-    import time
-    import importlib
-    sys.path.append("../../onmyoji")
-    import onmyoji.utils as u
-    from onmyoji import onmyoji_funcs
-    import logging
-    sys.path.append("../")
+import sys
+import os
+import time
+import importlib
+import onmyoji.utils as u
+import logging
+import huan_gou_liang.process
+import bonus.process
+from onmyoji import onmyoji_funcs
 
-    mod_path = os.environ.get("GAME_MODS_PATH")
-    sys.path.append(mod_path)
-    import huan_gou_liang.process
+
+def main_process(times=1, time_used=10):
 
     LOCKED = False
 
@@ -26,6 +24,11 @@ def main_process(times=1, time_used=10):
         p = u.offset_position(p, (150, -50))
         u.random_click(p, 10)
         u.random_sleep(5, 0.3)
+
+    logging.info("Trig bonus.")
+    if u.exists(os.path.join(img_dir, "bonus_deactive.png"),
+                thresold=0.98):
+        bonus.process.main_process()
 
     for i in range(times):
         logging.info("Start for times: " + str(i + 1) + ".")

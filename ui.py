@@ -14,20 +14,24 @@ import ctypes
 from functools import partial
 from onmyoji import utils as u
 
+
 window = tk.Tk()
 window.title("UI")
 
 GAME_TITLE = "阴阳师-网易游戏"
 GAME_WORKSPACE_PATH = os.getcwd()
 GAME_MODS_PATH = os.path.join(GAME_WORKSPACE_PATH, "mods")
+GAME_UTILS_PATH = os.path.join(GAME_WORKSPACE_PATH, "onmyoji")
 GAME_BACKGROUND = "True"
 GAME_LOG_FILE = os.path.join(GAME_WORKSPACE_PATH, "log", "game.log")
 GAME_MEM_LOG_FILE = os.path.join(GAME_WORKSPACE_PATH, "log", "game_mem.log")
+
 
 CURRENT_MOD = None
 
 os.environ["GAME_WORKSPACE_PATH"] = GAME_WORKSPACE_PATH
 os.environ["GAME_MODS_PATH"] = GAME_MODS_PATH
+os.environ["GAME_UTILS_PATH"] = GAME_UTILS_PATH
 os.environ["GAME_TITLE"] = GAME_TITLE
 os.environ["GAME_BACKGROUND"] = GAME_BACKGROUND
 os.environ["GAME_LOG_FILE"] = GAME_LOG_FILE
@@ -39,18 +43,6 @@ var_background.set(GAME_BACKGROUND == "True")
 
 var_debug = tk.BooleanVar()
 var_debug.set(True)
-
-
-def check_admin():
-    pass
-    # try:
-    #     if ctypes.windll.shell32.IsUserAnAdmin():
-    #         pass
-    #     else:
-    #         ctypes.windll.shell32.ShellExecuteW(
-    #             None, "runas", sys.executable, __file__, None, 1)
-    # except:
-    #     return False
 
 
 def set_debug():
@@ -81,6 +73,12 @@ def init():
     set_debug()
     center_window(500, 500)
 
+    # import paths
+    mod_path = os.environ.get("GAME_MODS_PATH")
+    sys.path.append(mod_path)
+    mod_path = os.environ.get("GAME_UTILS_PATH")
+    sys.path.append(mod_path)
+
 
 def center_window(w, h):
     # 获取屏幕 宽、高
@@ -93,7 +91,14 @@ def center_window(w, h):
 
 
 def get_mods_list(path=GAME_MODS_PATH):
-    return os.listdir(path)
+    def exclude_dir(dir_name):
+        exclude_dirs = ["__pycache__", "mod_base.py"]
+        if dir_name in exclude_dirs:
+            return False
+        else:
+            return True
+
+    return list(filter(exclude_dir, os.listdir(path)))
 
 
 def generate_mods_button():
@@ -223,9 +228,10 @@ def stop_current_mod():
 
 
 def main():
-    check_admin()
-
     init()
+
+    h = u.find_window(u.get_title())
+    print(h)
 
     tk.Checkbutton(window, text="后台运行", variable=var_background,
                    command=set_background).pack()

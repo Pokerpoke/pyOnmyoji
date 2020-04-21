@@ -4,5 +4,9 @@
     "python.linting.pylintArgs": [
         "--extension-pkg-whitelist=cv2,win32gui,win32ui,win32api"
     ],
-    "files.autoGuessEncoding": true
+    "files.autoGuessEncoding": true,
+    "python.autoComplete.extraPaths": [
+        "${workspaceRoot}/mods"
+    ],
+    "python.pythonPath": "C:\\Python37\\python.exe"
 }

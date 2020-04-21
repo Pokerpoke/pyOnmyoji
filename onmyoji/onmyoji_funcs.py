@@ -59,3 +59,13 @@ def goto_tan_suo():
         pass
     else:
         return
+
+
+def set_current_mod(mod):
+    """
+    Set current running mod.
+    """
+    if mod is None:
+        os.environ["CURRENT_MOD"] = "None"
+    else:
+        os.environ["CURRENT_MOD"] = mod

@@ -5,6 +5,13 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Python: Current File",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal"
+        },
+        {
             "name": "run in powershell",
             "type": "PowerShell",
             "request": "launch",
@@ -24,7 +31,9 @@
             "request": "launch",
             "program": "${workspaceFolder}\\match_test.py",
             "console": "integratedTerminal",
-            "args": ["screenshot"]
+            "args": [
+                "screenshot"
+            ]
         },
         {
             "name": "match test from file",
@@ -32,7 +41,9 @@
             "request": "launch",
             "program": "${workspaceFolder}\\match_test.py",
             "console": "integratedTerminal",
-            "args": ["file"]
+            "args": [
+                "file"
+            ]
         },
         {
             "name": "baiguiyexing",
@@ -40,7 +51,9 @@
             "request": "launch",
             "program": "${workspaceFolder}\\onmyoji.py",
             "console": "integratedTerminal",
-            "args": ["baiguiyexing"]
+            "args": [
+                "baiguiyexing"
+            ]
         },
         {
             "name": "yuhun_member",
@@ -48,7 +61,10 @@
             "request": "launch",
             "program": "${workspaceFolder}\\onmyoji.py",
             "console": "integratedTerminal",
-            "args": ["-t 5","yuhun_member"]
+            "args": [
+                "-t 5",
+                "yuhun_member"
+            ]
         },
         {
             "name": "yuhun_leader",
@@ -56,7 +72,10 @@
             "request": "launch",
             "program": "${workspaceFolder}\\onmyoji.py",
             "console": "integratedTerminal",
-            "args": ["-t 5","yuhun_leader"]
+            "args": [
+                "-t 5",
+                "yuhun_leader"
+            ]
         }
     ]
 }

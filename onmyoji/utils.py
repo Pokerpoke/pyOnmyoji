@@ -15,6 +15,7 @@ import math
 import logging
 from datetime import datetime
 from PIL import Image
+from win10toast import ToastNotifier
 
 
 def get_title():
@@ -55,6 +56,9 @@ class Point(object):
             return True
         else:
             return False
+
+    def __str__(self):
+        return "("+str(self.x)+", "+str(self.y)+")"
 
 
 def move(p, continuous=False, interval=0.1):
@@ -131,7 +135,10 @@ def slide(p_src, p_des, v=1,  duration=None, interval=0.01, release=True):
             win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP, 0, 0, 0, 0)
 
 
-def click(p):
+def click(p, duration=0):
+    if duration == 0:
+        duration = random.randint(20, 80)/1000
+
     background = get_background()
     if p == None:
         return
@@ -141,26 +148,32 @@ def click(p):
 
         pos_body = get_window_pos(window_handle)
 
-        x = p.x - pos_body.x
-        y = p.y - pos_body.y
+        x = p.x - pos_body.x - 5
+        y = p.y - pos_body.y - 30
 
-        long_position = win32api.MAKELONG(x, y)  # 模拟鼠标指针 传送到指定坐标
+        # 模拟鼠标指针 传送到指定坐标
+        long_position = win32api.MAKELONG(x, y)
         win32gui.SendMessage(
             window_handle, win32con.WM_MOUSEMOVE, 0, long_position)
-        win32gui.PostMessage(
-            window_handle, win32con.WM_LBUTTONDOWN, 0, long_position)  # 模拟鼠标按下
-        time.sleep(random.randint(20, 80)/1000)
+        # 模拟鼠标按下
         win32gui.SendMessage(
-            window_handle, win32con.WM_LBUTTONUP, 0, long_position)  # 模拟鼠标弹起
+            window_handle, win32con.WM_LBUTTONDOWN, 0, long_position)
+        time.sleep(duration)
+        # 模拟鼠标弹起
+        win32gui.SendMessage(
+            window_handle, win32con.WM_LBUTTONUP, 0, long_position)
+
+        logging.debug("Click ("+str(p.x)+", "+str(p.y)+")")
     else:
         x = p.x
         y = p.y
 
         win32api.SetCursorPos((x, y))
         win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN, x, y, 0, 0)
-        time.sleep(random.randint(20, 80)/1000)
+        time.sleep(duration)
         win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP, x, y, 0, 0)
-    logging.debug("Click ("+str(p.x)+", "+str(p.y)+")")
+
+        logging.debug("Click ("+str(x)+", "+str(y)+")")
 
 
 def find_window(title):
@@ -237,7 +250,7 @@ def match(img_rgb, template_rgb, show_result=False, thresold=0.7):
     return pos
 
 
-def exists(template, flag=0, thresold=0.7):
+def exists(template, flag=0, thresold=0.7, random_pos=True):
     if type(template) == str:
         template = cv2.imread(template)
 
@@ -245,15 +258,19 @@ def exists(template, flag=0, thresold=0.7):
     resource = get_screenshot(get_title())
     pos = match(resource, template, thresold=thresold)
     if len(pos) > 0:
-        pos = pos[random.randint(0, len(pos) - 1)]
-
         logging.debug("Existed")
+
+        res = []
         if flag == 0:
-            p = Point(int(pos.x + 0.5 * pos.width),
-                      int(pos.y + 0.5 * pos.height))
-            p = Point(pos_body.x + p.x,
-                      pos_body.y + p.y)
-        return p
+            for p in pos:
+                pt = Point(int(p.x + 0.5 * p.width),
+                           int(p.y + 0.5 * p.height))
+                pt = Point(pos_body.x + pt.x,
+                           pos_body.y + pt.y)
+                res.append(pt)
+        if random_pos:
+            res = res[random.randint(0, len(res) - 1)]
+        return res
     else:
         logging.debug("Not existed.")
         return None
@@ -288,9 +305,28 @@ def wait_until(template, timeout=10, interval=1, flag=0, thresold=0.7):
         end_time = datetime.now()
         time.sleep(interval)
         if (end_time - begin_time).seconds >= timeout:
+            toast("Match process timeout, check log for more informations.")
             raise TimeoutError("Match process timeout.")
 
     return None
+
+
+def click_if_exists(template,
+                    thresold=0.7,
+                    click_random=10,
+                    click_offset=(0, 0)):
+    """
+    Click if template exists.
+    """
+    _p = exists(template=template, thresold=thresold)
+    if _p is not None:
+        _p = offset_position(_p, click_offset)
+        random_sleep(0.5, 0.2)
+        random_click(_p, click_random)
+
+
+def click_until():
+    pass
 
 
 def offset_position(p, offset):
@@ -332,3 +368,8 @@ def set_foreround_window(title):
     handle = find_window(GAME_TITLE)
     win32gui.ShowWindow(handle, win32con.SW_RESTORE)
     win32gui.SetForegroundWindow(handle)
+
+
+def toast(message, duration=1):
+    toaster = ToastNotifier()
+    toaster.show_toast(message, duration=duration, threaded=True)

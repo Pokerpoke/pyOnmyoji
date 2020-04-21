@@ -2,3 +2,4 @@ pywin32
 opencv-python
 numpy
 pillow
+win10toast

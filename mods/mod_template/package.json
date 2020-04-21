@@ -1,0 +1,16 @@
+{
+    "name": "mod_template",
+    "text": "mod模板",
+    "visiable": 0,
+    "scene": "ting_yuan",
+    "version": "0.1",
+    "comment": "运行界面",
+    "params": [
+        {
+            "param": "thresold",
+            "text": "阈值",
+            "param_t": "float",
+            "default": 0.7
+        }
+    ]
+}
