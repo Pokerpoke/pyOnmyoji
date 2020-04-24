@@ -1,26 +1,20 @@
 # 纯Python脚本
 
-不使用AirTest。
-
-required
-
-python3 -m pip install pywin32 opencv-python numpy scipy
+阴阳师护肝脚本。
 
 ## 安装依赖
 
 - 安装python3.7
-- 右击`install.ps1`->用PowerShell打开
+- 双击`install.start`，等待安装完成
 
 ## 运行方式
 
-- 右击`start.ps1`->用PowerShell打开
+- 右击`start.bat`->管理员权限运行
+
+## 已有mod
+
+- 困28(默认开启金币、经验加成)：设定次数后，可以从庭院、探索、困28（有探索按钮的那个框）、进入困28界面进入
 
 ## TODO:
 
-- 资源释放
-- 中文流程
-- 多开
-- 鼠标拖动
-- 狗粮选择
-- 宴会
-- 日志记录
+[TODOS](https://github.com/Pokerpoke/pyOnmyoji/projects/1)
