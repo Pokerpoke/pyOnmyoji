@@ -45,7 +45,7 @@ def click_mark(mark):
 
 
 def goto_scene(s):
-    # @TODO: 用map重构，减少if的使用
+    # TODO: 用map重构，减少if的使用
     cur_scene = current_scene()
     if s == "ting_yuan":
         # 庭院

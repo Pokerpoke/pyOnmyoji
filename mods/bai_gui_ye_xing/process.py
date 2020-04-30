@@ -31,7 +31,7 @@ def main_process(times=1):
             logging.info("Search for xuan_ze_hao_you.png.")
             p = u.wait_until(os.path.join(
                 img_dir, "xuan_ze_hao_you.png"),
-                thresold=0.4)
+                thresold=0.5)
             u.random_sleep(1, 0.5)
             u.random_click(p, 5)
             try:
