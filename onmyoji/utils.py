@@ -276,7 +276,9 @@ def exists(template, flag=0, thresold=0.7, random_pos=True):
         return None
 
 
-def wait_until(template, timeout=10, interval=1, flag=0, thresold=0.7):
+def wait_until(template, timeout=10,
+               interval=1, flag=0,
+               thresold=0.7, toast_=True):
     '''
     flag 0 -> center
     '''
@@ -305,7 +307,8 @@ def wait_until(template, timeout=10, interval=1, flag=0, thresold=0.7):
         end_time = datetime.now()
         time.sleep(interval)
         if (end_time - begin_time).seconds >= timeout:
-            toast("Match process timeout, check log for more informations.")
+            if toast_:
+                toast("Match process timeout, check log for more informations.")
             raise TimeoutError("Match process timeout.")
 
     return None
@@ -370,6 +373,6 @@ def set_foreround_window(title):
     win32gui.SetForegroundWindow(handle)
 
 
-def toast(message, duration=1):
+def toast(message, duration=5):
     toaster = ToastNotifier()
     toaster.show_toast(message, duration=duration, threaded=True)

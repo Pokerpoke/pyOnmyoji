@@ -1,13 +1,13 @@
 {
-    "name": "baiguiyexing",
-    "text": "百鬼夜行",
+    "name": "xie_zuo",
+    "text": "协作任务",
     "version": "0.1",
     "params": [
         {
             "param": "times",
             "text": "次数",
-            "param_t": "int",
-            "default": 3
+            "input_int": "times",
+            "default": 1
         }
     ]
 }

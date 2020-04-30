@@ -5,6 +5,7 @@ import importlib
 import onmyoji.utils as u
 import logging
 import huan_gou_liang.process
+import xie_zuo.process
 import bonus.process
 from onmyoji import onmyoji_funcs
 
@@ -12,6 +13,7 @@ from onmyoji import onmyoji_funcs
 def main_process(times=1, time_used=10):
 
     LOCKED = False
+    BONUS_ACTIVE = False
 
     img_dir = os.path.join(__file__, "..", "img")
 
@@ -28,6 +30,7 @@ def main_process(times=1, time_used=10):
     logging.info("Trig bonus.")
     if u.exists(os.path.join(img_dir, "bonus_deactive.png"),
                 thresold=0.98):
+        BONUS_ACTIVE = True
         bonus.process.main_process()
 
     for i in range(times):
@@ -157,4 +160,9 @@ def main_process(times=1, time_used=10):
             u.random_click(p, 10)
             u.random_sleep(5, 0.3)
 
+    logging.info("Trig bonus.")
+    if BONUS_ACTIVE:
+        bonus.process.main_process()
+
+    u.toast("Explore finished.")
     logging.info("Finished.")

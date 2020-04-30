@@ -8,5 +8,8 @@
         "yuhun_leader",
         "yuhun_member",
         "yuling"
-    ]
+    ],
+    "env": {
+        "GAME_TITLE": ""
+    }
 }

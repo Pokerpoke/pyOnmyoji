@@ -1,18 +1,19 @@
-def main_process(times=1):
-    import sys
-    import os
-    import time
-    from datetime import datetime
-    sys.path.append("../../onmyoji")
-    import onmyoji.utils as u
-    import logging
+import logging
+import os
+from datetime import datetime
+import onmyoji.utils as u
+import onmyoji.onmyoji_funcs as o
 
+
+def main_process(times=1):
     img_dir = os.path.join(__file__, "..", "img")
 
     logging.info("Will run for "+str(times)+" times.")
 
     INVITED_MAX = False
     INVITED = False
+
+    o.goto_scene("bai_gui_ye_xing")
 
     for i in range(times):
         if not INVITED:
@@ -28,7 +29,9 @@ def main_process(times=1):
                 u.random_sleep(1, 0.5)
             # choose friend
             logging.info("Search for xuan_ze_hao_you.png.")
-            p = u.wait_until(os.path.join(img_dir, "xuan_ze_hao_you.png"))
+            p = u.wait_until(os.path.join(
+                img_dir, "xuan_ze_hao_you.png"),
+                thresold=0.4)
             u.random_sleep(1, 0.5)
             u.random_click(p, 5)
             try:
@@ -46,17 +49,17 @@ def main_process(times=1):
                     continue
             except TimeoutError:
                 pass
-            # get in
+            # 进入
             logging.info("Search for jin_ru.png.")
             p = u.wait_until(os.path.join(img_dir, "jin_ru.png"))
             u.random_sleep(1, 0.5)
             u.random_click(p, 20)
             u.random_sleep(1, 0.5)
-            # choose monster king
+            # 选择鬼王，选择中间的
             logging.info("Search for xuan_ze_gui_wang.png.")
             try:
                 p = u.wait_until(os.path.join(
-                    img_dir, "xuan_ze_gui_wang.png"), timeout=2)
+                    img_dir, "xuan_ze_gui_wang.png"), timeout=10)
             except TimeoutError:
                 i = i - 1
                 INVITED = True
@@ -74,6 +77,7 @@ def main_process(times=1):
             continue
 
         u.random_sleep(1, 0.5)
+        p = u.offset_position(p, (0, 300))
         u.random_click(p, 20)
         u.random_sleep(2, 0.5)
         # start
