@@ -1,16 +1,16 @@
 {
-    "name": "explore",
-    "text": "探索",
+    "name": "yu_hun",
+    "text": "御魂（单人）",
     "version": "0.1",
     "params": [
         {
             "param": "times",
             "text": "次数",
             "param_t": "int",
-            "default": 10
+            "default": 1
         },
         {
-            "param": "time_uesd",
+            "param": "time_used",
             "text": "通关时间",
             "param_t": "int",
             "default": 35

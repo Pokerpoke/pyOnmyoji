@@ -1,17 +1,18 @@
 {
-    "name": "juexing",
-    "text": "觉醒",
+    "name": "tan_suo",
+    "text": "探索",
     "version": "0.1",
     "params": [
         {
             "param": "times",
             "text": "次数",
-            "input_int": "times",
-            "default": 1
+            "param_t": "int",
+            "default": 10
         },
         {
             "param": "time_uesd",
-            "input_int": "time_used",
+            "text": "通关时间",
+            "param_t": "int",
             "default": 7
         }
     ]

@@ -36,6 +36,10 @@
         "route": [
             "tan_suo_deng_long",
             "yu_hun"
+        ],
+        "to_ting_yuan": [
+            "fan_hui",
+            "fan_hui"
         ]
     },
     "yu_hun_10": {
@@ -52,6 +56,10 @@
             "tan_suo_deng_long",
             "yu_hun",
             "yu_hun_ba_qi_da_she"
+        ],
+        "to_ting_yuan": [
+            "fan_hui",
+            "fan_hui"
         ]
     },
     "kun_28": {
@@ -62,6 +70,65 @@
         ],
         "to_ting_yuan": [
             "kun_28_cha",
+            "fan_hui"
+        ]
+    },
+    "jue_xing": {
+        "mark": "jue_xing_zhi_ta",
+        "route": [
+            "tan_suo_deng_long",
+            "jue_xing_cai_liao"
+        ],
+        "to_ting_yuan": [
+            "fan_hui",
+            "fan_hui"
+        ]
+    },
+    "huo_qi_lin": {
+        "mark": "huo_qi_lin_0.98",
+        "route": [
+            "tan_suo_deng_long",
+            "jue_xing_cai_liao",
+            "ye_huo_lun_0.98"
+        ],
+        "to_ting_yuan": [
+            "fan_hui",
+            "fan_hui"
+        ]
+    },
+    "feng_qi_lin": {
+        "mark": "feng_qi_lin_0.98",
+        "route": [
+            "tan_suo_deng_long",
+            "jue_xing_cai_liao",
+            "feng_zhuan_fu_0.98"
+        ],
+        "to_ting_yuan": [
+            "fan_hui",
+            "fan_hui"
+        ]
+    },
+    "shui_qi_lin": {
+        "mark": "shui_qi_lin_0.98",
+        "route": [
+            "tan_suo_deng_long",
+            "jue_xing_cai_liao",
+            "shui_ling_li_0.98"
+        ],
+        "to_ting_yuan": [
+            "fan_hui",
+            "fan_hui"
+        ]
+    },
+    "lei_qi_lin": {
+        "mark": "lei_qi_lin_0.98",
+        "route": [
+            "tan_suo_deng_long",
+            "jue_xing_cai_liao",
+            "tian_lei_gu_0.98"
+        ],
+        "to_ting_yuan": [
+            "fan_hui",
             "fan_hui"
         ]
     }

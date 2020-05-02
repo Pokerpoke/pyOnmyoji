@@ -1,13 +1,5 @@
 {
     "name": "hua_he_zhan",
     "text": "花合战",
-    "version": "0.1",
-    "params": [
-        {
-            "param": "thresold",
-            "text": "阈值",
-            "param_t": "float",
-            "default": 0.7
-        }
-    ]
+    "version": "0.1"
 }

@@ -6,14 +6,14 @@ import onmyoji.utils as u
 import onmyoji.onmyoji_funcs as o
 
 
-def main_process(times=1, time_used=7):
+def main_process(times=1, time_used=35):
 
     img_dir = os.path.join(__file__, "..", "img")
 
     logging.info("Will run for: "+str(times)+" times.")
 
     # 进入御魂界面
-    o.goto_scene("yu_hun")
+    o.goto_scene("yu_hun_11")
 
     for i in range(times):
         logging.info("Start for times: " + str(i + 1) + ".")
