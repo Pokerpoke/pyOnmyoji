@@ -13,7 +13,8 @@ def main_process(times=1):
     INVITED_MAX = False
     INVITED = False
 
-    o.goto_scene("bai_gui_ye_xing")
+    if o.current_scene() is not None:
+        o.goto_scene("bai_gui_ye_xing")
 
     for i in range(times):
         if not INVITED:
@@ -21,13 +22,13 @@ def main_process(times=1):
                 INVITED_MAX = False
 
                 logging.info("Start for times: " + str(i + 1) + ".")
-                # invite friend
+                # 邀请好友
                 logging.info("Search for yao_qing_hao_you.png.")
                 p = u.wait_until(os.path.join(img_dir, "yao_qing_hao_you.png"))
                 u.random_sleep(1, 0.5)
                 u.random_click(p, 10)
                 u.random_sleep(1, 0.5)
-            # choose friend
+            # 选择好友
             logging.info("Search for xuan_ze_hao_you.png.")
             p = u.wait_until(os.path.join(
                 img_dir, "xuan_ze_hao_you.png"),
@@ -65,7 +66,7 @@ def main_process(times=1):
                 INVITED = True
                 continue
         else:
-            # invited
+            # 邀请
             logging.info("Search for qu_xiao_xuan_ze_hao_you.png.")
             p = u.wait_until(os.path.join(
                 img_dir, "qu_xiao_xuan_ze_hao_you.png"))
@@ -80,17 +81,17 @@ def main_process(times=1):
         p = u.offset_position(p, (0, 300))
         u.random_click(p, 20)
         u.random_sleep(2, 0.5)
-        # start
+        # 开始
         logging.info("Search for kai_shi.png.")
         p = u.wait_until(os.path.join(img_dir, "kai_shi.png"))
         u.random_sleep(1, 0.5)
         u.random_click(p, 20)
         u.random_sleep(3, 0.5)
-        # za dou zi
+        # 砸豆子
         logging.info("Start piu piu piu.")
         begin_time = datetime.now()
         while (True):
-            # check if finished
+            # 判断是否完成，前面一直点一定概率直接跳过分享界面了
             p = u.exists(os.path.join(img_dir, "feng_xiang.png"))
             if p != None:
                 u.random_sleep(1, 0.2)
@@ -101,7 +102,7 @@ def main_process(times=1):
             p = u.position_relative(0.8, 0.55)
             u.random_click(p, 20)
             u.random_sleep(0.5, 0.2)
-            # time out
+            # 超时退出
             if (datetime.now() - begin_time).seconds >= 80:
                 break
 

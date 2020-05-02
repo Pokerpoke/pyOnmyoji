@@ -2,13 +2,55 @@
 
 import os
 import logging
+import json
 from onmyoji.utils import *
 
 
 cur_path = os.path.join(os.environ.get("GAME_WORKSPACE_PATH"), "onmyoji")
 
 
+scene_conf = None
+with open(os.path.join(cur_path, "scenes.json")) as f:
+    scene_conf = json.load(f)
+
+
 def current_scene():
+    global cur_path
+    global scene_conf
+
+    for scene in scene_conf:
+        if exists(os.path.join(cur_path, "img/" +
+                               scene_conf[scene]["mark"] +
+                               ".png")):
+            logging.info("Current_scene is "+scene+".")
+            return scene
+    raise RuntimeError("Scene cannot be recognized.")
+
+
+def goto_scene(s):
+    global cur_path
+    global scene_conf
+
+    cur_scene = current_scene()
+    if s == cur_scene:
+        pass
+    elif s == "ting_yuan":
+        for next_scene in scene_conf[cur_scene]["to_ting_yuan"]:
+            click_mark(next_scene)
+            random_sleep(1.5, 0.2)
+    elif cur_scene in scene_conf:
+        goto_scene("ting_yuan")
+        for next_scene in scene_conf[s]["route"]:
+            if "0.98" in next_scene:
+                click_mark(next_scene, thresold=0.98)
+            else:
+                click_mark(next_scene)
+            random_sleep(1.5, 0.2)
+    else:
+        raise RuntimeError("Scene cannot access.")
+
+
+def current_scene_legacy():
     """
     庭院
     町中
@@ -36,15 +78,16 @@ def current_scene():
         return None
 
 
-def click_mark(mark):
+def click_mark(mark, thresold=0.7):
     global cur_path
 
-    p = wait_until(os.path.join(cur_path, "img/"+mark+".png"))
+    p = wait_until(os.path.join(cur_path, "img/" +
+                                mark+".png"), thresold=thresold)
     random_sleep(1, 0.2)
     random_click(p, 10)
 
 
-def goto_scene(s):
+def goto_scene_legacy(s):
     # TODO: 用map重构，减少if的使用
     cur_scene = current_scene()
     if s == "ting_yuan":
@@ -137,24 +180,11 @@ def goto_scene(s):
         logging.error("Wrong scene.")
 
 
-def goto_ting_yuan():
-    pass
-
-
 def lineup_locked():
-    pass
-
-
-def goto_tan_suo():
-    scene = current_scene()
-    if scene == "ting_yuan":
-        click_mark("tan_suo_deng_long")
-    elif scene == "ting_zhong":
-        click_mark("ting_yuan")
-    elif scene == "tan_suo":
-        pass
-    else:
-        return
+    """
+    阵容锁定
+    """
+    return exists(os.path.join(cur_path, "img/zhen_rong_suo_ding.png"))
 
 
 def set_current_mod(mod):

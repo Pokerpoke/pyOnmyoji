@@ -1,0 +1,68 @@
+{
+    "ting_yuan": {
+        "mark": "tan_suo_deng_long"
+    },
+    "ting_zhong": {
+        "mark": "mi_juan_shu_tong",
+        "route": [
+            "ting_zhong"
+        ],
+        "to_ting_yuan": [
+            "ting_yuan"
+        ]
+    },
+    "tan_suo": {
+        "mark": "yao",
+        "route": [
+            "tan_suo_deng_long"
+        ],
+        "to_ting_yuan": [
+            "fan_hui"
+        ]
+    },
+    "bai_gui_ye_xing": {
+        "mark": "bai_gui_ye_xing",
+        "route": [
+            "ting_zhong",
+            "bai_gui_ye_xing_deng_long"
+        ],
+        "to_ting_yuan": [
+            "bai_gui_ye_xing_cha",
+            "ting_yuan"
+        ]
+    },
+    "yu_hun": {
+        "mark": "yu_hun_ba_qi_da_she",
+        "route": [
+            "tan_suo_deng_long",
+            "yu_hun"
+        ]
+    },
+    "yu_hun_10": {
+        "mark": "ba_qi_da_she",
+        "route": [
+            "tan_suo_deng_long",
+            "yu_hun",
+            "yu_hun_ba_qi_da_she"
+        ]
+    },
+    "yu_hun_11": {
+        "mark": "wu_nv_da_she",
+        "route": [
+            "tan_suo_deng_long",
+            "yu_hun",
+            "yu_hun_ba_qi_da_she"
+        ]
+    },
+    "kun_28": {
+        "mark": "shao_nv_yu_mian_ju",
+        "route": [
+            "tan_suo_deng_long",
+            "di_28_zhang_0.98"
+        ],
+        "to_ting_yuan": [
+            "kun_28_cha",
+            "fan_hui"
+        ]
+    }
+}

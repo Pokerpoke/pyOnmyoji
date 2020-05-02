@@ -17,8 +17,8 @@ def main_process(times=1, time_used=10):
 
     img_dir = os.path.join(__file__, "..", "img")
 
-    if onmyoji_funcs.current_scene() != "tan_suo":
-        onmyoji_funcs.goto_tan_suo()
+    if onmyoji_funcs.current_scene() is not None:
+        onmyoji_funcs.goto_scene("tan_suo")
         u.random_sleep(2, 0.3)
 
     p = u.exists(os.path.join(img_dir, "ping_an_qi_tan.png"))
@@ -69,7 +69,7 @@ def main_process(times=1, time_used=10):
             if not BOSS_FOUND:
                 try:
                     p = u.wait_until(os.path.join(img_dir, "zhan_dou.png"),
-                                     timeout=2)
+                                     timeout=2, notify=False)
                 except TimeoutError:
                     p = u.exists(os.path.join(
                         img_dir, "chu_zhan_xiao_hao.png"))

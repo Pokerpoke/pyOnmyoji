@@ -72,7 +72,7 @@ def distance(x, y):
     return math.sqrt((y.y-x.y)*(y.y-x.y)+(y.x-x.x)*(y.x-x.x))
 
 
-def slide(p_src, p_des, v=1,  duration=None, interval=0.01, release=True):
+def slide(p_src, p_des, v=1, duration=None, interval=0.01, release=True):
     """
     Slide from src to des.
     """
@@ -278,7 +278,7 @@ def exists(template, flag=0, thresold=0.7, random_pos=True):
 
 def wait_until(template, timeout=10,
                interval=1, flag=0,
-               thresold=0.7, toast_=True):
+               thresold=0.7, notify=True):
     '''
     flag 0 -> center
     '''
@@ -307,7 +307,7 @@ def wait_until(template, timeout=10,
         end_time = datetime.now()
         time.sleep(interval)
         if (end_time - begin_time).seconds >= timeout:
-            if toast_:
+            if notify:
                 toast("Match process timeout, check log for more informations.")
             raise TimeoutError("Match process timeout.")
 
