@@ -1,8 +1,10 @@
 {
     "ting_yuan": {
+        "chinese": "庭院",
         "mark": "tan_suo_deng_long"
     },
     "ting_zhong": {
+        "chinese": "町中",
         "mark": "mi_juan_shu_tong",
         "route": [
             "ting_zhong"
@@ -12,6 +14,7 @@
         ]
     },
     "tan_suo": {
+        "chinese": "探索",
         "mark": "yao",
         "route": [
             "tan_suo_deng_long"
@@ -21,6 +24,7 @@
         ]
     },
     "bai_gui_ye_xing": {
+        "chinese": "百鬼夜行",
         "mark": "bai_gui_ye_xing",
         "route": [
             "ting_zhong",
@@ -32,6 +36,7 @@
         ]
     },
     "yu_hun": {
+        "chinese": "御魂",
         "mark": "yu_hun_ba_qi_da_she",
         "route": [
             "tan_suo_deng_long",
@@ -43,6 +48,7 @@
         ]
     },
     "yu_hun_10": {
+        "chinese": "御魂10层",
         "mark": "ba_qi_da_she",
         "route": [
             "tan_suo_deng_long",
@@ -51,6 +57,7 @@
         ]
     },
     "yu_hun_11": {
+        "chinese": "御魂11层",
         "mark": "wu_nv_da_she",
         "route": [
             "tan_suo_deng_long",
@@ -63,6 +70,7 @@
         ]
     },
     "kun_28": {
+        "chinese": "困28",
         "mark": "shao_nv_yu_mian_ju",
         "route": [
             "tan_suo_deng_long",
@@ -74,6 +82,7 @@
         ]
     },
     "jue_xing": {
+        "chinese": "觉醒",
         "mark": "jue_xing_zhi_ta",
         "route": [
             "tan_suo_deng_long",
@@ -85,6 +94,7 @@
         ]
     },
     "huo_qi_lin": {
+        "chinese": "火麒麟",
         "mark": "huo_qi_lin_0.98",
         "route": [
             "tan_suo_deng_long",
@@ -97,6 +107,7 @@
         ]
     },
     "feng_qi_lin": {
+        "chinese": "风麒麟",
         "mark": "feng_qi_lin_0.98",
         "route": [
             "tan_suo_deng_long",
@@ -109,6 +120,7 @@
         ]
     },
     "shui_qi_lin": {
+        "chinese": "水麒麟",
         "mark": "shui_qi_lin_0.98",
         "route": [
             "tan_suo_deng_long",
@@ -121,6 +133,7 @@
         ]
     },
     "lei_qi_lin": {
+        "chinese": "雷麒麟",
         "mark": "lei_qi_lin_0.98",
         "route": [
             "tan_suo_deng_long",

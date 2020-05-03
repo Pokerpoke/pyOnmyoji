@@ -74,7 +74,7 @@ def distance(x, y):
 
 def slide(p_src, p_des, v=1, duration=None, interval=0.01, release=True):
     """
-    Slide from src to des.
+    滑动操作，从p_src滑动到p_des
     """
     if duration == None:
         duration = random.uniform(0.3, 0.5)
@@ -136,6 +136,9 @@ def slide(p_src, p_des, v=1, duration=None, interval=0.01, release=True):
 
 
 def click(p, duration=0):
+    """
+    点击操作
+    """
     if duration == 0:
         duration = random.randint(20, 80)/1000
 
@@ -163,7 +166,7 @@ def click(p, duration=0):
         win32gui.SendMessage(
             window_handle, win32con.WM_LBUTTONUP, 0, long_position)
 
-        logging.debug("Click ("+str(p.x)+", "+str(p.y)+")")
+        logging.debug("点击("+str(p.x)+", "+str(p.y)+")")
     else:
         x = p.x
         y = p.y
@@ -173,15 +176,21 @@ def click(p, duration=0):
         time.sleep(duration)
         win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP, x, y, 0, 0)
 
-        logging.debug("Click ("+str(x)+", "+str(y)+")")
+        logging.debug("点击("+str(x)+", "+str(y)+")")
 
 
 def find_window(title):
+    """
+    查找窗口，返回句柄
+    """
     handle = win32gui.FindWindow(None, title)
     return handle
 
 
 def get_window_pos(window_handle):
+    """
+    获取窗口位置，返回(x,y,width,heigth)
+    """
     rect = win32gui.GetWindowRect(find_window(get_title()))
     x = rect[0]
     y = rect[1]
@@ -193,6 +202,9 @@ def get_window_pos(window_handle):
 
 
 def get_screenshot(title, filename=None):
+    """
+    截图
+    """
     handle = find_window(get_title())
     hwndDC = win32gui.GetWindowDC(handle)
     mfcDC = win32ui.CreateDCFromHandle(hwndDC)
@@ -230,6 +242,9 @@ def get_screenshot(title, filename=None):
 
 
 def match(img_rgb, template_rgb, show_result=False, thresold=0.7):
+    """
+    模板匹配
+    """
     img_gray = cv2.cvtColor(img_rgb, cv2.COLOR_BGR2GRAY)
     template_gray = cv2.cvtColor(template_rgb, cv2.COLOR_BGR2GRAY)
     w, h = template_gray.shape[::-1]
@@ -243,7 +258,7 @@ def match(img_rgb, template_rgb, show_result=False, thresold=0.7):
                       (pt[0] + w, pt[1] + h), (7, 249, 151), 2)
         pos.append(Pos(pt[0], pt[1], w, h))
     if show_result:
-        cv2.imshow('Match Result', img_rgb)
+        cv2.imshow("匹配结果", img_rgb)
         cv2.waitKey(0)
         cv2.destroyAllWindows()
 

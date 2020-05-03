@@ -1,14 +1,18 @@
+import sys
+import os
+import time
+import logging
+import onmyoji.utils as u
+import onmyoji.onmyoji_funcs as o
+
+
 def main_process(times=1, time_used=7):
-    import sys
-    import os
-    import time
-    sys.path.append("../../onmyoji")
-    import onmyoji.utils as u
-    import logging
 
     img_dir = os.path.join(__file__, "..", "img")
 
     logging.info("Will run for: "+str(times)+" times")
+
+    o.goto_scene("yu_ling")
 
     for i in range(times):
         logging.info("Start for times: " + str(i + 1) + ".")

@@ -17,14 +17,21 @@ def main_process(times=1, time_used=35):
 
     for i in range(times):
         logging.info("Start for times: " + str(i + 1) + ".")
+        # 阵容锁定
+        LINEUP_LOCKED = o.lineup_locked()
         # 点击挑战按钮
         logging.info("Search for tiao_zhan.png.")
         p = u.wait_until(os.path.join(img_dir, "tiao_zhan.png"))
         u.random_click(p, 20)
+        u.random_sleep(1, 0.3)
+        # 点击准备
+        if not LINEUP_LOCKED:
+            o.click_mark("zhun_bei", interval=3)
         u.random_sleep(time_used+3, 0.3)
         # 等待打完，判断胜利
         logging.info("Search for sheng_li.png.")
-        p = u.wait_until(os.path.join(img_dir, "sheng_li.png"))
+        p = u.wait_until(os.path.join(img_dir, "sheng_li.png"),
+                         timeout=time_used)
         u.random_sleep(1, 0.3)
         u.random_click(p, 20)
         # 点击红蛋

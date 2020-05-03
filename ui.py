@@ -118,6 +118,10 @@ def generate_mods_button():
         with open(info_path, encoding='UTF-8') as f:
             mod_info = json.load(f)
 
+        if "visible" in mod_info:
+            if not mod_info["visible"]:
+                continue
+
         if "text" in mod_info:
             tk.Label(mod_frame, text=mod_info["text"]).grid(
                 row=row_idx, column=col_idx)

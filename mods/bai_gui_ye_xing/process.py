@@ -21,7 +21,7 @@ def main_process(times=1):
             if not INVITED_MAX:
                 INVITED_MAX = False
 
-                logging.info("Start for times: " + str(i + 1) + ".")
+                logging.info("运行:" + str(i + 1) + "次.")
                 # 邀请好友
                 logging.info("Search for yao_qing_hao_you.png.")
                 p = u.wait_until(os.path.join(img_dir, "yao_qing_hao_you.png"))

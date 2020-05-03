@@ -13,7 +13,7 @@
             "param": "time_uesd",
             "text": "通关时间",
             "param_t": "int",
-            "default": 35
+            "default": 27
         }
     ]
 }

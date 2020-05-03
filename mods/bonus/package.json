@@ -2,17 +2,5 @@
     "name": "bonus",
     "text": "开启加成",
     "version": "0.1",
-    "params": [
-        {
-            "param": "times",
-            "text": "次数",
-            "input_int": "times",
-            "default": 1
-        },
-        {
-            "param": "time_uesd",
-            "input_int": "time_used",
-            "default": 7
-        }
-    ]
+    "visible": false
 }
