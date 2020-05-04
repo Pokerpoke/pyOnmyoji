@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+# -*- coding:utf-8 -*-
+
 import sys
 import os
 import time
@@ -18,6 +21,8 @@ def main_process(times=1, time_used=10):
     img_dir = os.path.join(__file__, "..", "img")
 
     logging.info("将要执行"+str(times)+"次")
+
+    time_used_min = 5
 
     if onmyoji_funcs.current_scene() is not None:
         onmyoji_funcs.goto_scene("tan_suo")
@@ -106,12 +111,12 @@ def main_process(times=1, time_used=10):
                 u.random_sleep(2, 0.5)
                 u.random_click(p, 10)
 
-            u.random_sleep(2, 0.5)
+            u.random_sleep(time_used_min, 0.5)
 
             # battle and win
             logging.info("Search for sheng_li.png.")
             p = u.wait_until(os.path.join(img_dir, "sheng_li.png"),
-                             timeout=time_used+15, interval=0.2)
+                             timeout=time_used*2, interval=0.2)
             u.random_sleep(1, 0.2)
             p = u.offset_position(p, (300, 300))
             u.random_click(p, 20)

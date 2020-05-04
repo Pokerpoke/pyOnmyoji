@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 
 import os
@@ -87,7 +88,8 @@ def lineup_locked():
         logging.debug("阵容未锁定")
         return False
     else:
-        raise RuntimeError("无法识别阵容锁定状态。")
+        logging.error("无法识别阵容锁定状态。")
+        return None
 
 
 def lock_lineup():

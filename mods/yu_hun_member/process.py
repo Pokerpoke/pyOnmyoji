@@ -11,7 +11,10 @@ import mods.bonus.process as bonus
 def main_process(times=1, time_used=35):
     img_dir = os.path.join(__file__, "..", "img")
 
-    logging.info("即将执行"+str(times)+"次")
+    # 最短时间，控制sleep以降低消耗
+    time_used_min = 18
+
+    logging.info("执行御魂（队员）"+str(times)+"次")
 
     INVITE_LOCKED = False
     LINEUP_LOCKED = False
@@ -50,11 +53,11 @@ def main_process(times=1, time_used=35):
         time.sleep(1)
 
         o.lock_lineup()
-        time.sleep(time_used)
+        time.sleep(time_used_min)
 
         logging.info("Search for sheng_li.png.")
         p = u.wait_until(os.path.join(img_dir, "sheng_li.png"),
-                         timeout=time_used+25)
+                         timeout=time_used*2)
         u.random_sleep(1, 0.3)
         p = u.offset_position(p, (300, 300))
         u.random_click(p, 20)
@@ -63,7 +66,7 @@ def main_process(times=1, time_used=35):
 
         logging.info("Search for jie_suan.png.")
         p = u.wait_until(os.path.join(img_dir, "jie_suan.png"))
-        u.random_sleep(1, 0.3)
+        u.random_sleep(2, 0.3)
         p = u.offset_position(p, (300, 0))
         u.random_click(p, 20)
 

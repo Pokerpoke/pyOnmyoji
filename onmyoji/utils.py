@@ -16,6 +16,20 @@ import logging
 from datetime import datetime
 from PIL import Image
 from win10toast import ToastNotifier
+from threading import Thread
+
+
+class OnmyojiThread(Thread):
+    def __init__(self, target):
+        Thread.__init__(self)
+        self.ret_val = None
+        self.thread_ = target
+
+    def run(self):
+        self.ret_val = self.thread_()
+
+    def get_ret(self):
+        return self.ret_val
 
 
 def get_title():
@@ -290,7 +304,7 @@ def match(img_rgb, template_rgb, show_result=False, thresold=0.7):
                       (pt[0] + w, pt[1] + h), (7, 249, 151), 2)
         pos.append(Pos(pt[0], pt[1], w, h))
     if show_result:
-        cv2.imshow("匹配结果", img_rgb)
+        cv2.imshow("match result", img_rgb)
         cv2.waitKey(0)
         cv2.destroyAllWindows()
 

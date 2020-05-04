@@ -1,4 +1,5 @@
-# -*- coding: UTF-8 -*-
+#!/usr/bin/env python3
+# -*- coding:utf-8 -*-
 
 import sys
 import tkinter as tk
@@ -25,6 +26,8 @@ GAME_UTILS_PATH = os.path.join(GAME_WORKSPACE_PATH, "onmyoji")
 GAME_BACKGROUND = "True"
 GAME_LOG_FILE = os.path.join(GAME_WORKSPACE_PATH, "log", "game.log")
 GAME_MEM_LOG_FILE = os.path.join(GAME_WORKSPACE_PATH, "log", "game_mem.log")
+GAME_YYS_MULTI_LEADER = "None"
+GAME_YYS_MULTI_MEMBER = "None"
 
 
 CURRENT_MOD = None
@@ -36,6 +39,8 @@ os.environ["GAME_TITLE"] = GAME_TITLE
 os.environ["GAME_BACKGROUND"] = GAME_BACKGROUND
 os.environ["GAME_LOG_FILE"] = GAME_LOG_FILE
 os.environ["GAME_MEM_LOG_FILE"] = GAME_MEM_LOG_FILE
+os.environ["GAME_YYS_MULTI_LEADER"] = GAME_YYS_MULTI_LEADER
+os.environ["GAME_YYS_MULTI_MEMBER"] = GAME_YYS_MULTI_MEMBER
 
 
 var_background = tk.BooleanVar()
@@ -59,14 +64,7 @@ def set_debug():
                 logging.StreamHandler()
             ])
     else:
-        logging.basicConfig(
-            format="[%(asctime)s]: %(levelname)s - %(message)s",
-            datefmt='%Y-%m-%d %H:%M:%S',
-            level=logging.INFO,
-            handlers=[
-                logging.FileHandler(GAME_LOG_FILE),
-                logging.StreamHandler()
-            ])
+        logging.getLogger().setLevel(logging.INFO)
 
 
 def init():
@@ -226,8 +224,6 @@ def stop_current_mod():
 
 def main():
     init()
-
-    h = u.find_window(u.get_title())
 
     tk.Checkbutton(window, text="后台运行", variable=var_background,
                    command=set_background).pack()

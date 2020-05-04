@@ -7,11 +7,14 @@ import onmyoji.onmyoji_funcs as o
 import mods.bonus.process as bonus
 
 
-def main_process(times=1, time_used=35, floor=11):
+def main_process(times=10, time_used=35, floor=11):
 
     img_dir = os.path.join(__file__, "..", "img")
 
     logging.info("即将运行"+str(times)+"次")
+
+    # 最短时间，目前是18s
+    time_used_min = 18
 
     # 进入御魂界面
     o.goto_scene("yu_hun_"+str(floor))
@@ -31,11 +34,11 @@ def main_process(times=1, time_used=35, floor=11):
         # 阵容未锁定，点击准备
         if not LINEUP_LOCKED:
             o.click_mark("zhun_bei", interval=3)
-        u.random_sleep(time_used+3, 0.3)
+        u.random_sleep(time_used_min+3, 0.3)
         # 等待打完，判断胜利
         logging.info("Search for sheng_li.png.")
         p = u.wait_until(os.path.join(img_dir, "sheng_li.png"),
-                         timeout=time_used)
+                         timeout=time_used*2)
         u.random_sleep(1, 0.1)
         u.random_click(p, 20)
         # 点击红蛋

@@ -7,7 +7,7 @@
             "param": "times",
             "text": "次数",
             "param_t": "int",
-            "default": 1
+            "default": 10
         },
         {
             "param": "time_used",
