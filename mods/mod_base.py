@@ -6,9 +6,10 @@ import onmyoji.utils as u
 import logging
 import huan_gou_liang.process
 from onmyoji import onmyoji_funcs
+from threading import Thread
 
 
-class GameMod():
+class GameMod(Thread):
 
     def __init__(self):
         pass

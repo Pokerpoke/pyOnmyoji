@@ -11,6 +11,8 @@ def main_process(times=1, time_used=7, target="lei_qi_lin"):
 
     img_dir = os.path.join(__file__, "..", "img")
 
+    time_used_min = 7
+
     logging.info("即将执行：" + str(times)+"次")
 
     if target in ["lei_qi_lin", "feng_qi_lin", "shui_qi_lin", "huo_qi_lin"]:
@@ -36,10 +38,10 @@ def main_process(times=1, time_used=7, target="lei_qi_lin"):
         if not LINEUP_LOCKED:
             o.click_mark("zhun_bei", interval=3)
 
-        u.random_sleep(time_used, 0.3)
+        u.random_sleep(time_used_min, 0.3)
         logging.info("Search for sheng_li.png.")
         p = u.wait_until(os.path.join(
-            img_dir, "sheng_li.png"), timeout=time_used)
+            img_dir, "sheng_li.png"), timeout=time_used*2)
         u.random_sleep(1, 0.3)
         u.random_click(p, 20)
 

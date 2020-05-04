@@ -59,11 +59,13 @@ def main_process(times=1, time_used=35):
         p = u.wait_until(os.path.join(img_dir, "sheng_li.png"),
                          timeout=time_used*2)
         u.random_sleep(1, 0.3)
+
+        # 点赞
+        u.click_if_exists(os.path.join(img_dir, "dian_zan.png"))
+        # 胜利下方点击
         p = u.offset_position(p, (300, 300))
         u.random_click(p, 20)
-
-        u.click_if_exists(os.path.join(img_dir, "dian_zan.png"))
-
+        # 等待跳蛋
         logging.info("Search for jie_suan.png.")
         p = u.wait_until(os.path.join(img_dir, "jie_suan.png"))
         u.random_sleep(2, 0.3)

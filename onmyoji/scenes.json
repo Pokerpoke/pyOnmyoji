@@ -146,5 +146,25 @@
             "fan_hui",
             "fan_hui"
         ]
+    },
+    "hao_you": {
+        "chinese": "好友",
+        "mark": "hao_you_0.98",
+        "route": [
+            "hao_you"
+        ],
+        "to_ting_yuan": [
+            "hao_you_cha"
+        ]
+    },
+    "hua_he_zhan": {
+        "chinese": "花合战",
+        "mark": "hua_he_zhan_mark_0.98",
+        "route": [
+            "hua_he_zhan"
+        ],
+        "to_ting_yuan": [
+            "hua_he_zhan_fan_hui"
+        ]
     }
 }

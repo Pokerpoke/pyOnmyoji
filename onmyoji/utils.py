@@ -339,7 +339,8 @@ def exists(template, flag=0, thresold=0.7, random_pos=True):
 
 def wait_until(template, timeout=10,
                interval=1, flag=0,
-               thresold=0.7, notify=True):
+               thresold=0.7, notify=True,
+               raise_except=True):
     '''
     flag 0 -> center
     '''
@@ -370,7 +371,10 @@ def wait_until(template, timeout=10,
         if (end_time - begin_time).seconds >= timeout:
             if notify:
                 toast("匹配过程超时，查看日志以获得更多信息")
-            raise TimeoutError("Match process timeout.")
+            if raise_except:
+                raise TimeoutError("Match process timeout.")
+            else:
+                break
 
     return None
 
@@ -412,7 +416,7 @@ def random_time(t, offset):
     return t + random.uniform(-offset, offset)
 
 
-def random_sleep(t, offset):
+def random_sleep(t, offset=0):
     return time.sleep(random_time(t, offset))
 
 
