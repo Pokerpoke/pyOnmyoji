@@ -15,4 +15,6 @@ def main_process(thresold=0.7, type=0):
     # o.lock_lineup()
     # u.random_sleep(1, 0.2)
     # o.unlock_lineup()
-    o.goto_scene("lei_qi_lin")
+    # o.goto_scene("lei_qi_lin")
+    # u.get_cursor_window_handle()
+    print(o.lineup_locked())

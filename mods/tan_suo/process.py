@@ -17,6 +17,8 @@ def main_process(times=1, time_used=10):
 
     img_dir = os.path.join(__file__, "..", "img")
 
+    logging.info("将要执行"+str(times)+"次")
+
     if onmyoji_funcs.current_scene() is not None:
         onmyoji_funcs.goto_scene("tan_suo")
         u.random_sleep(2, 0.3)

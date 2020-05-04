@@ -201,13 +201,6 @@ def button_clicked(func, entries, param_t, mod_name):
     CURRENT_MOD.setDaemon(True)
     CURRENT_MOD.start()
 
-    # if CURRENT_MOD == None:
-    #     CURRENT_MOD = threading.Thread(target=func, args=(*params,))
-    #     CURRENT_MOD.setDaemon(True)
-    #     CURRENT_MOD.start()
-    # else:
-    #     logging.warning("Another mod is running, please stop it.")
-
 
 def set_background():
     global var_background
@@ -235,7 +228,6 @@ def main():
     init()
 
     h = u.find_window(u.get_title())
-    print(h)
 
     tk.Checkbutton(window, text="后台运行", variable=var_background,
                    command=set_background).pack()

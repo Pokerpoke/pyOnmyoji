@@ -26,6 +26,38 @@ def get_background():
     return os.environ.get("GAME_BACKGROUND") == "True"
 
 
+def get_cursor_window_handle():
+    # Left button down = 0 or 1. Button up = -127 or -128
+    state_left = win32api.GetKeyState(0x01)
+    # Right button down = 0 or 1. Button up = -127 or -128
+    state_right = win32api.GetKeyState(0x02)
+
+    p = None
+    while True:
+        a = win32api.GetKeyState(0x01)
+        b = win32api.GetKeyState(0x02)
+
+        if a != state_left:  # Button state changed
+            state_left = a
+            if a < 0:
+                logging.debug("左键按下")
+                (x, y) = win32api.GetCursorPos()
+                p = Point(x, y)
+                break
+            else:
+                logging.debug("左键释放")
+        if b != state_right:  # Button state changed
+            state_right = b
+            if b < 0:
+                logging.debug("右键按下")
+            else:
+                logging.debug("右键释放")
+        time.sleep(0.001)
+    handle = win32gui.WindowFromPoint((p.x, p.y))
+    logging.info("当前窗口句柄："+str(handle))
+    return handle
+
+
 class Pos(object):
     def __init__(self, x=0, y=0, w=0, h=0, i=0):
         self.x = x
@@ -273,7 +305,7 @@ def exists(template, flag=0, thresold=0.7, random_pos=True):
     resource = get_screenshot(get_title())
     pos = match(resource, template, thresold=thresold)
     if len(pos) > 0:
-        logging.debug("Existed")
+        logging.debug("目标模板存在")
 
         res = []
         if flag == 0:
@@ -287,7 +319,7 @@ def exists(template, flag=0, thresold=0.7, random_pos=True):
             res = res[random.randint(0, len(res) - 1)]
         return res
     else:
-        logging.debug("Not existed.")
+        logging.debug("目标模板不存在")
         return None
 
 
@@ -306,12 +338,12 @@ def wait_until(template, timeout=10,
     while True:
         resource = get_screenshot(get_title())
 
-        logging.debug("Matching...")
+        logging.debug("匹配中...")
         pos = match(resource, template, thresold=thresold)
         if len(pos) > 0:
             pos = pos[random.randint(0, len(pos) - 1)]
 
-            logging.debug("Matched.")
+            logging.debug("匹配成功")
             if flag == 0:
                 p = Point(int(pos.x + 0.5 * pos.width),
                           int(pos.y + 0.5 * pos.height))
@@ -323,7 +355,7 @@ def wait_until(template, timeout=10,
         time.sleep(interval)
         if (end_time - begin_time).seconds >= timeout:
             if notify:
-                toast("Match process timeout, check log for more informations.")
+                toast("匹配过程超时，查看日志以获得更多信息")
             raise TimeoutError("Match process timeout.")
 
     return None
@@ -332,15 +364,18 @@ def wait_until(template, timeout=10,
 def click_if_exists(template,
                     thresold=0.7,
                     click_random=10,
-                    click_offset=(0, 0)):
+                    click_offset=(0, 0),
+                    interval=0.5):
     """
     Click if template exists.
     """
     _p = exists(template=template, thresold=thresold)
     if _p is not None:
         _p = offset_position(_p, click_offset)
-        random_sleep(0.5, 0.2)
+        random_sleep(interval, 0.2)
         random_click(_p, click_random)
+        return True
+    return False
 
 
 def click_until():

@@ -1,15 +1,17 @@
+import sys
+import os
+import time
+import logging
+import onmyoji.utils as u
+import onmyoji.onmyoji_funcs as o
+
+
 def main_process(times=1, time_used=7):
-    import sys
-    import os
-    import time
-    sys.path.append("../../onmyoji")
-    import onmyoji.utils as u
-    import logging
 
     img_dir = os.path.join(__file__, "..", "img")
 
     for i in range(times):
-        logging.info("Start for times: ", str(times + 1), ".")
+        logging.info("Start for times: " + str(times + 1) + ".")
 
         logging.info("Search for tiao_zhan.png.")
         p = u.wait_until(os.path.join(img_dir, "tiao_zhan.png"))

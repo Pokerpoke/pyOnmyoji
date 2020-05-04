@@ -15,6 +15,9 @@ with open(os.path.join(cur_path, "scenes.json"), encoding="utf-8") as f:
 
 
 def current_scene():
+    """
+    获取当前场景，场景配置位于scenes.json。
+    """
     global cur_path
     global scene_conf
 
@@ -33,6 +36,9 @@ def current_scene():
 
 
 def goto_scene(s):
+    """
+    进入场景，默认从当前场景返回庭院再次进入场景，场景配置位于scenes.json。
+    """
     global cur_path
     global scene_conf
 
@@ -85,6 +91,9 @@ def lineup_locked():
 
 
 def lock_lineup():
+    """
+    锁定阵容
+    """
     global cur_path
 
     if not lineup_locked():
@@ -93,6 +102,9 @@ def lock_lineup():
 
 
 def unlock_lineup():
+    """
+    解锁阵容
+    """
     global cur_path
 
     if lineup_locked():

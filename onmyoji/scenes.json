@@ -53,7 +53,8 @@
         "route": [
             "tan_suo_deng_long",
             "yu_hun",
-            "yu_hun_ba_qi_da_she"
+            "yu_hun_ba_qi_da_she",
+            "yu_hun_shi_ceng_0.98"
         ]
     },
     "yu_hun_11": {
@@ -62,7 +63,8 @@
         "route": [
             "tan_suo_deng_long",
             "yu_hun",
-            "yu_hun_ba_qi_da_she"
+            "yu_hun_ba_qi_da_she",
+            "yu_hun_bei_ming_0.98"
         ],
         "to_ting_yuan": [
             "fan_hui",
