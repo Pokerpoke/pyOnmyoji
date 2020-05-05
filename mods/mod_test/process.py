@@ -17,4 +17,5 @@ def main_process(thresold=0.7, type=0):
     # o.unlock_lineup()
     # o.goto_scene("lei_qi_lin")
     # u.get_cursor_window_handle()
-    print(o.lineup_locked())
+    # print(o.lineup_locked())
+    o.goto_scene("jie_jie_ka_he_cheng")

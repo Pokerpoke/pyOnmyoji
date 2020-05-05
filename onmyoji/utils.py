@@ -142,8 +142,10 @@ def slide(p_src, p_des, v=1, duration=None, interval=0.01, release=True):
 
         pos_body = get_window_pos(window_handle)
 
-        p_cur.x = p_cur.x - pos_body.x
-        p_cur.y = p_cur.y - pos_body.y
+        # 加上偏移，传进来的坐标有标题栏和边框
+        # 手动测试的，不一定完全准确
+        p_cur.x = p_cur.x - pos_body.x - 5
+        p_cur.y = p_cur.y - pos_body.y - 30
 
         long_position = win32api.MAKELONG(p_cur.x, p_cur.y)  # 模拟鼠标指针 传送到指定坐标
         win32gui.SendMessage(
@@ -287,16 +289,24 @@ def get_screenshot(title, filename=None):
     return res
 
 
-def match(img_rgb, template_rgb, show_result=False, thresold=0.7):
+def match(img_rgb, template_rgb, show_result=False, thresold=0.7, gray=True):
     """
     模板匹配
     """
-    img_gray = cv2.cvtColor(img_rgb, cv2.COLOR_BGR2GRAY)
-    template_gray = cv2.cvtColor(template_rgb, cv2.COLOR_BGR2GRAY)
-    w, h = template_gray.shape[::-1]
+    img_gray = None
+    template_gray = None
+    w = 0
+    h = 0
+    if gray:
+        img_gray = cv2.cvtColor(img_rgb, cv2.COLOR_BGR2GRAY)
+        template_gray = cv2.cvtColor(template_rgb, cv2.COLOR_BGR2GRAY)
+        w, h = template_gray.shape[::-1]
+    else:
+        img_gray = img_rgb
+        template_gray = template_rgb
+        h, w, _ = template_gray.shape
 
     res = cv2.matchTemplate(img_gray, template_gray, cv2.TM_CCOEFF_NORMED)
-    thresold = thresold
     loc = np.where(res >= thresold)
     pos = []
     for pt in zip(*loc[::-1]):

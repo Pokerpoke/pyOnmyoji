@@ -166,5 +166,42 @@
         "to_ting_yuan": [
             "hua_he_zhan_fan_hui"
         ]
+    },
+    "yin_yang_liao": {
+        "chinese": "阴阳寮",
+        "mark": "yin_yang_liao_mark",
+        "route": [
+            "yin_yang_liao_0.98"
+        ],
+        "to_ting_yuan": [
+            "yin_yang_liao_fan_hui"
+        ]
+    },
+    "jie_jie": {
+        "chinese": "结界",
+        "mark": "jie_jie_ka",
+        "route": [
+            "yin_yang_liao",
+            "jie_jie_0.98"
+        ],
+        "to_ting_yuan": [
+            "fan_hui",
+            "yin_yang_liao_fan_hui"
+        ]
+    },
+    "jie_jie_ka_he_cheng": {
+        "chinese": "结界卡合成",
+        "mark": "jie_jie_ka_mark_0.98",
+        "route": [
+            "yin_yang_liao_0.98",
+            "jie_jie_0.98",
+            "jie_jie_ka",
+            "jie_jie_ka_he_cheng_0.98"
+        ],
+        "to_ting_yuan": [
+            "jie_jie_ka_cha",
+            "fan_hui",
+            "yin_yang_liao_fan_hui"
+        ]
     }
 }
