@@ -1,0 +1,8 @@
+{
+    "game_title": "阴阳师-网易游戏",
+    "game_workspace_path": "${game_workspace}",
+    "game_mods_path": "${game_workspace}\\mods",
+    "game_utils_path": "${game_workspace}\\onmyoji",
+    "game_log_file_path": "${game_workspace}\\log\\yys.log",
+    "game_background": true
+}

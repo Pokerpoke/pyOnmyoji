@@ -14,37 +14,38 @@ import inspect
 import ctypes
 from functools import partial
 from onmyoji import utils as u
+from onmyoji import env
 
 
 window = tk.Tk()
 window.title("UI")
 
-GAME_TITLE = "阴阳师-网易游戏"
-GAME_WORKSPACE_PATH = os.getcwd()
-GAME_MODS_PATH = os.path.join(GAME_WORKSPACE_PATH, "mods")
-GAME_UTILS_PATH = os.path.join(GAME_WORKSPACE_PATH, "onmyoji")
-GAME_BACKGROUND = "True"
-GAME_LOG_FILE = os.path.join(GAME_WORKSPACE_PATH, "log", "game.log")
-GAME_MEM_LOG_FILE = os.path.join(GAME_WORKSPACE_PATH, "log", "game_mem.log")
-GAME_YYS_MULTI_LEADER = "None"
-GAME_YYS_MULTI_MEMBER = "None"
+# GAME_TITLE = "阴阳师-网易游戏"
+# GAME_WORKSPACE_PATH = os.getcwd()
+# GAME_MODS_PATH = os.path.join(GAME_WORKSPACE_PATH, "mods")
+# GAME_UTILS_PATH = os.path.join(GAME_WORKSPACE_PATH, "onmyoji")
+# GAME_BACKGROUND = "True"
+# GAME_LOG_FILE = os.path.join(GAME_WORKSPACE_PATH, "log", "game.log")
+# GAME_MEM_LOG_FILE = os.path.join(GAME_WORKSPACE_PATH, "log", "game_mem.log")
+# GAME_YYS_MULTI_LEADER = "None"
+# GAME_YYS_MULTI_MEMBER = "None"
 
 
 CURRENT_MOD = None
 
-os.environ["GAME_WORKSPACE_PATH"] = GAME_WORKSPACE_PATH
-os.environ["GAME_MODS_PATH"] = GAME_MODS_PATH
-os.environ["GAME_UTILS_PATH"] = GAME_UTILS_PATH
-os.environ["GAME_TITLE"] = GAME_TITLE
-os.environ["GAME_BACKGROUND"] = GAME_BACKGROUND
-os.environ["GAME_LOG_FILE"] = GAME_LOG_FILE
-os.environ["GAME_MEM_LOG_FILE"] = GAME_MEM_LOG_FILE
-os.environ["GAME_YYS_MULTI_LEADER"] = GAME_YYS_MULTI_LEADER
-os.environ["GAME_YYS_MULTI_MEMBER"] = GAME_YYS_MULTI_MEMBER
+# os.environ["GAME_WORKSPACE_PATH"] = GAME_WORKSPACE_PATH
+# os.environ["GAME_MODS_PATH"] = GAME_MODS_PATH
+# os.environ["GAME_UTILS_PATH"] = GAME_UTILS_PATH
+# os.environ["GAME_TITLE"] = GAME_TITLE
+# os.environ["GAME_BACKGROUND"] = GAME_BACKGROUND
+# os.environ["GAME_LOG_FILE"] = GAME_LOG_FILE
+# os.environ["GAME_MEM_LOG_FILE"] = GAME_MEM_LOG_FILE
+# os.environ["GAME_YYS_MULTI_LEADER"] = GAME_YYS_MULTI_LEADER
+# os.environ["GAME_YYS_MULTI_MEMBER"] = GAME_YYS_MULTI_MEMBER
 
 
 var_background = tk.BooleanVar()
-var_background.set(GAME_BACKGROUND == "True")
+var_background.set(env.get("game_background") == True)
 
 var_debug = tk.BooleanVar()
 var_debug.set(True)
@@ -60,7 +61,7 @@ def set_debug():
             datefmt='%Y-%m-%d %H:%M:%S',
             level=logging.DEBUG,
             handlers=[
-                logging.FileHandler(GAME_LOG_FILE),
+                logging.FileHandler(env.get("game_log_file_path")),
                 logging.StreamHandler()
             ])
     else:
@@ -72,9 +73,9 @@ def init():
     center_window(500, 500)
 
     # import paths
-    mod_path = os.environ.get("GAME_MODS_PATH")
+    mod_path = env.get("game_mods_path")
     sys.path.append(mod_path)
-    mod_path = os.environ.get("GAME_UTILS_PATH")
+    mod_path = env.get("game_utils_path")
     sys.path.append(mod_path)
 
 
@@ -88,7 +89,7 @@ def center_window(w, h):
     window.geometry('%dx%d+%d+%d' % (w, h, x, y))
 
 
-def get_mods_list(path=GAME_MODS_PATH):
+def get_mods_list(path=env.get("game_mods_path")):
     def exclude_dir(dir_name):
         exclude_dirs = ["__pycache__", "mod_base.py"]
         if dir_name in exclude_dirs:
@@ -108,7 +109,8 @@ def generate_mods_button():
         mod_frame = tk.Frame(window)
         mod_frame.pack()
 
-        info_path = os.path.join(GAME_MODS_PATH, mod_name, "package.json")
+        info_path = os.path.join(
+            env.get("game_mods_path"), mod_name, "package.json")
 
         mod = importlib.import_module("mods."+mod_name+".process")
 
@@ -203,12 +205,14 @@ def button_clicked(func, entries, param_t, mod_name):
 def set_background():
     global var_background
 
-    if var_background.get() == True:
+    if var_background.get():
         logging.info("Run in background.")
-        os.environ["GAME_BACKGROUND"] = "True"
+        env.push("game_background", True)
+        # os.environ["GAME_BACKGROUND"] = "True"
     else:
         logging.info("Run in foreground.")
-        os.environ["GAME_BACKGROUND"] = "False"
+        env.push("game_background", False)
+        # os.environ["GAME_BACKGROUND"] = "False"
 
 
 def stop_current_mod():

@@ -9,13 +9,14 @@ def main_process(thresold=0.7, type=0):
     import onmyoji.utils as u
     import os
     import logging
+    from onmyoji import env
 
     # type = 1
 
-    resource_path = os.path.join(os.environ.get(
-        "GAME_MODS_PATH"), "match_test", "img", "resource.png")
-    template_path = os.path.join(os.environ.get(
-        "GAME_MODS_PATH"), "match_test", "img", "template.png")
+    resource_path = os.path.join(env.get(
+        "game_mods_path"), "match_test", "img", "resource.png")
+    template_path = os.path.join(env.get(
+        "game_mods_path"), "match_test", "img", "template.png")
 
     if type == 0:
         resource = u.get_screenshot(u.get_title())

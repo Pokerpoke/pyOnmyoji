@@ -38,7 +38,7 @@ def main_process(times=1):
             try:
                 logging.info("Search for yao_qing_ci_shu_shang_xian.png.")
                 p = u.wait_until(os.path.join(
-                    img_dir, "yao_qing_ci_shu_shang_xian.png"), timeout=1, interval=0.1)
+                    img_dir, "yao_qing_ci_shu_shang_xian.png"), timeout=1, interval=0.1, notify=False)
                 if p != None:
                     p = u.exists(os.path.join(
                         img_dir, "guan_bi_xuan_ze_hao_you.png"))

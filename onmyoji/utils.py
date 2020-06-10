@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 # -*- coding:utf-8 -*-
 
+from onmyoji import env
 import win32api
 import win32con
 import win32gui
@@ -33,11 +34,11 @@ class OnmyojiThread(Thread):
 
 
 def get_title():
-    return os.environ.get("GAME_TITLE")
+    return env.get("game_title")
 
 
 def get_background():
-    return os.environ.get("GAME_BACKGROUND") == "True"
+    return env.get("game_background")
 
 
 def get_cursor_window_handle():
@@ -417,12 +418,12 @@ def offset_position(p, offset):
         return p+Point(offset.x, offset.y)
 
 
-def random_position(p, offset):
+def random_position(p, offset=10):
     return p + Point(random.randint(-offset, offset),
                      random.randint(-offset, offset))
 
 
-def random_time(t, offset):
+def random_time(t, offset=1):
     return t + random.uniform(-offset, offset)
 
 
@@ -430,7 +431,7 @@ def random_sleep(t, offset=0):
     return time.sleep(random_time(t, offset))
 
 
-def random_click(p, offset):
+def random_click(p, offset=10):
     return click(random_position(p, offset))
 
 
@@ -444,7 +445,7 @@ def position_relative(x, y):
 
 
 def set_foreround_window(title):
-    GAME_TITLE = os.environ.get("GAME_TITLE")
+    GAME_TITLE = env.get("game_title")
 
     handle = find_window(GAME_TITLE)
     win32gui.ShowWindow(handle, win32con.SW_RESTORE)

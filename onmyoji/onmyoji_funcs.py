@@ -7,7 +7,7 @@ import json
 from onmyoji.utils import *
 
 
-cur_path = os.path.join(os.environ.get("GAME_WORKSPACE_PATH"), "onmyoji")
+cur_path = os.path.join(env.get("game_workspace_path"), "onmyoji")
 
 
 scene_conf = None
@@ -63,15 +63,15 @@ def goto_scene(s):
         # raise RuntimeError("Scene cannot access.")
 
 
-def click_mark(mark, thresold=0.7, interval=1):
+def click_mark(mark, thresold=0.7, interval=1, timeout=10):
     """
     点击预设标志
     """
     global cur_path
 
     p = wait_until(os.path.join(cur_path, "img/" +
-                                mark+".png"), thresold=thresold)
-    random_sleep(interval, 0.2)
+                                mark+".png"), thresold=thresold, timeout=timeout)
+    random_sleep(interval, 0.1)
     random_click(p, 10)
 
 
@@ -122,3 +122,11 @@ def set_current_mod(mod):
         os.environ["CURRENT_MOD"] = "None"
     else:
         os.environ["CURRENT_MOD"] = mod
+
+
+def win(timeout=10, interval=1, thresold=0.7):
+    global cur_path
+
+    return wait_until(os.path.join(cur_path, "img", "sheng_li"),
+                      timeout=timeout, interval=interval,
+                      notify=False, thresold=thresold)

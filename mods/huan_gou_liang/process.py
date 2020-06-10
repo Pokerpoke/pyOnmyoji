@@ -38,9 +38,10 @@ def main_process(times=1, time_used=7):
             time.sleep(1)
             continue
 
-        logging.info("Search for gou_liang_bai_dan.png")
+        # logging.info("Search for gou_liang_bai_dan.png")
+        logging.info("Search for gou_liang_hong_dan.png")
         src = u.wait_until(os.path.join(
-            img_dir, "gou_liang_bai_dan.png"), thresold=0.99)
+            img_dir, "gou_liang_hong_dan.png"), thresold=0.99)
 
         if src != None:
             temp = u.Point(src.x, src.y-200)
