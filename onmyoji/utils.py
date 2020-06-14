@@ -16,6 +16,7 @@ import math
 import logging
 from datetime import datetime
 from PIL import Image
+from PIL import ImageGrab
 from win10toast import ToastNotifier
 from threading import Thread
 
@@ -41,6 +42,10 @@ def get_background():
     return env.get("game_background")
 
 
+def get_window_handle(title):
+    return find_window(title)
+
+
 def get_cursor_window_handle():
     # Left button down = 0 or 1. Button up = -127 or -128
     state_left = win32api.GetKeyState(0x01)
@@ -52,7 +57,8 @@ def get_cursor_window_handle():
         a = win32api.GetKeyState(0x01)
         b = win32api.GetKeyState(0x02)
 
-        if a != state_left:  # Button state changed
+        if a != state_left:
+            # Button state changed
             state_left = a
             if a < 0:
                 logging.debug("左键按下")
@@ -61,7 +67,8 @@ def get_cursor_window_handle():
                 break
             else:
                 logging.debug("左键释放")
-        if b != state_right:  # Button state changed
+        if b != state_right:
+            # Button state changed
             state_right = b
             if b < 0:
                 logging.debug("右键按下")
@@ -250,43 +257,63 @@ def get_window_pos(window_handle):
     return pos
 
 
-def get_screenshot(title, filename=None):
+def get_screenshot(title, filename=None, show=False):
     """
     截图
     """
-    handle = find_window(get_title())
-    hwndDC = win32gui.GetWindowDC(handle)
-    mfcDC = win32ui.CreateDCFromHandle(hwndDC)
-    saveDC = mfcDC.CreateCompatibleDC()
-    saveBitMap = win32ui.CreateBitmap()
-    pos = get_window_pos(handle)
-    w = pos.width
-    h = pos.height
-    # 图片大小
-    # 为bitmap开辟空间
-    saveBitMap.CreateCompatibleBitmap(mfcDC, w, h)
-    # 高度saveDC，将截图保存到saveBitmap中
-    saveDC.SelectObject(saveBitMap)
-    # 截取从左上角（0，0）长宽为（w，h）的图片
-    saveDC.BitBlt((0, 0), (w, h), mfcDC, (0, 0), win32con.SRCCOPY)
+################################################################################
+#   以前可以用，不知道是不是处理过这种方法了
+#   貌似阴阳师用win32截图出来，现在是全黑的，暂时弃用
+#   PyQt5截图也不行了
+################################################################################
+    # handle = find_window(get_title())
+    # hwndDC = win32gui.GetWindowDC(handle)
+    # mfcDC = win32ui.CreateDCFromHandle(hwndDC)
+    # saveDC = mfcDC.CreateCompatibleDC()
+    # saveBitMap = win32ui.CreateBitmap()
+    # pos = get_window_pos(handle)
+    # # 获取大小
+    # w = pos.width
+    # h = pos.height
+    # # 图片大小
+    # # 为bitmap开辟空间
+    # saveBitMap.CreateCompatibleBitmap(mfcDC, w, h)
+    # # 高度saveDC，将截图保存到saveBitmap中
+    # saveDC.SelectObject(saveBitMap)
+    # # 截取从左上角（0，0）长宽为（w，h）的图片
+    # saveDC.BitBlt((0, 0), (w, h), mfcDC, (0, 0), win32con.SRCCOPY)
 
-    if filename != None:
-        saveBitMap.SaveBitmapFile(saveDC, filename)
+    # if filename != None:
+    #     saveBitMap.SaveBitmapFile(saveDC, filename)
 
-    bmpinfo = saveBitMap.GetInfo()
-    bmpstr = saveBitMap.GetBitmapBits(True)
-    # 生成图像
-    im_PIL = Image.frombuffer('RGB',
-                              (bmpinfo['bmWidth'],
-                               bmpinfo['bmHeight']),
-                              bmpstr, 'raw', 'BGRX')
-    res = cv2.cvtColor(np.asarray(im_PIL), cv2.COLOR_RGB2BGR)
+    # bmpinfo = saveBitMap.GetInfo()
+    # bmpstr = saveBitMap.GetBitmapBits(True)
+    # # 生成图像
+    # im_PIL = Image.frombuffer('RGB',
+    #                           (bmpinfo['bmWidth'],
+    #                            bmpinfo['bmHeight']),
+    #                           bmpstr, 'raw', 'BGRX')
+    # res = cv2.cvtColor(np.asarray(im_PIL), cv2.COLOR_RGB2BGR)
 
-    saveDC.SelectObject(saveBitMap)
-    saveDC.DeleteDC()
-    mfcDC.DeleteDC()
-    win32gui.DeleteObject(saveBitMap.GetHandle())
-    win32gui.ReleaseDC(handle, hwndDC)
+    # saveDC.SelectObject(saveBitMap)
+    # saveDC.DeleteDC()
+    # mfcDC.DeleteDC()
+    # win32gui.DeleteObject(saveBitMap.GetHandle())
+    # win32gui.ReleaseDC(handle, hwndDC)
+
+################################################################################
+#   ImageGrab方式截图，要求不能被遮挡
+################################################################################
+    pos = get_window_pos(get_title())
+    bbox = (pos.x, pos.y, pos.x+pos.width, pos.y+pos.height)
+    res = ImageGrab.grab(bbox)
+    if show:
+        res.show()
+    if filename is not None:
+        res.save(filename)
+
+    res = cv2.cvtColor(np.asarray(res), cv2.COLOR_RGB2BGR)
+
     return res
 
 

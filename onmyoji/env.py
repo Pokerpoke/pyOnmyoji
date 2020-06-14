@@ -41,4 +41,4 @@ def get(key):
 def push(key, value):
     global game_conf
 
-    return game_conf.push(kye, value)
+    return game_conf.push(key, value)

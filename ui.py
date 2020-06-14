@@ -14,35 +14,14 @@ import inspect
 import ctypes
 from functools import partial
 from onmyoji import utils as u
+from gui import multi as m
 from onmyoji import env
 
 
 window = tk.Tk()
-window.title("UI")
-
-# GAME_TITLE = "阴阳师-网易游戏"
-# GAME_WORKSPACE_PATH = os.getcwd()
-# GAME_MODS_PATH = os.path.join(GAME_WORKSPACE_PATH, "mods")
-# GAME_UTILS_PATH = os.path.join(GAME_WORKSPACE_PATH, "onmyoji")
-# GAME_BACKGROUND = "True"
-# GAME_LOG_FILE = os.path.join(GAME_WORKSPACE_PATH, "log", "game.log")
-# GAME_MEM_LOG_FILE = os.path.join(GAME_WORKSPACE_PATH, "log", "game_mem.log")
-# GAME_YYS_MULTI_LEADER = "None"
-# GAME_YYS_MULTI_MEMBER = "None"
-
+window.title("123")
 
 CURRENT_MOD = None
-
-# os.environ["GAME_WORKSPACE_PATH"] = GAME_WORKSPACE_PATH
-# os.environ["GAME_MODS_PATH"] = GAME_MODS_PATH
-# os.environ["GAME_UTILS_PATH"] = GAME_UTILS_PATH
-# os.environ["GAME_TITLE"] = GAME_TITLE
-# os.environ["GAME_BACKGROUND"] = GAME_BACKGROUND
-# os.environ["GAME_LOG_FILE"] = GAME_LOG_FILE
-# os.environ["GAME_MEM_LOG_FILE"] = GAME_MEM_LOG_FILE
-# os.environ["GAME_YYS_MULTI_LEADER"] = GAME_YYS_MULTI_LEADER
-# os.environ["GAME_YYS_MULTI_MEMBER"] = GAME_YYS_MULTI_MEMBER
-
 
 var_background = tk.BooleanVar()
 var_background.set(env.get("game_background") == True)
@@ -70,7 +49,7 @@ def set_debug():
 
 def init():
     set_debug()
-    center_window(500, 500)
+    center_window(500, 700)
 
     # import paths
     mod_path = env.get("game_mods_path")
@@ -237,6 +216,8 @@ def main():
     generate_mods_button()
 
     tk.Button(window, text="停止", command=stop_current_mod).pack()
+
+    tk.Button(window, text="获取窗口句柄", command=m.get_handle).pack()
 
 
 main()
