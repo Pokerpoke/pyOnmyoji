@@ -19,7 +19,7 @@ from onmyoji import env
 
 
 window = tk.Tk()
-window.title("UI")
+window.title("123")
 
 CURRENT_MOD = None
 

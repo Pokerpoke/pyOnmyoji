@@ -4,5 +4,7 @@
     "game_mods_path": "${game_workspace}\\mods",
     "game_utils_path": "${game_workspace}\\onmyoji",
     "game_log_file_path": "${game_workspace}\\log\\yys.log",
-    "game_background": true
+    "game_background": true,
+    "game_window_width": 1136,
+    "game_window_height": 640
 }
