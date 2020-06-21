@@ -1,5 +1,19 @@
 {
-    "name": "yu_hun",
-    "text": "御魂队长",
-    "version": "0.1"
+    "name": "yu_hun_member",
+    "text": "御魂（队长）",
+    "version": "0.1",
+    "params": [
+        {
+            "param": "times",
+            "text": "次数",
+            "param_t": "int",
+            "default": 30
+        },
+        {
+            "param": "time_uesd",
+            "text": "通关时间",
+            "param_t": "int",
+            "default": 35
+        }
+    ]
 }

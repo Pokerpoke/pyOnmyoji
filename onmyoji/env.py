@@ -27,6 +27,9 @@ class Conf:
     def push(self, key, value):
         self.j[key] = value
 
+    def set(self, key, value):
+        self.j[key] = value
+
 
 game_conf = Conf()
 game_conf.read()
@@ -42,3 +45,9 @@ def push(key, value):
     global game_conf
 
     return game_conf.push(key, value)
+
+
+def set(key, value):
+    global game_conf
+
+    return game_conf.set(key, value)

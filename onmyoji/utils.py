@@ -266,55 +266,59 @@ def get_screenshot(title, filename=None, show=False):
 #   貌似阴阳师用win32截图出来，现在是全黑的，暂时弃用
 #   PyQt5截图也不行了
 ################################################################################
-    # handle = find_window(get_title())
-    # hwndDC = win32gui.GetWindowDC(handle)
-    # mfcDC = win32ui.CreateDCFromHandle(hwndDC)
-    # saveDC = mfcDC.CreateCompatibleDC()
-    # saveBitMap = win32ui.CreateBitmap()
-    # pos = get_window_pos(handle)
-    # # 获取大小
-    # w = pos.width
-    # h = pos.height
-    # # 图片大小
-    # # 为bitmap开辟空间
-    # saveBitMap.CreateCompatibleBitmap(mfcDC, w, h)
-    # # 高度saveDC，将截图保存到saveBitmap中
-    # saveDC.SelectObject(saveBitMap)
-    # # 截取从左上角（0，0）长宽为（w，h）的图片
-    # saveDC.BitBlt((0, 0), (w, h), mfcDC, (0, 0), win32con.SRCCOPY)
+    if not env.get("game_image_grab"):
+        handle = find_window(get_title())
+        hwndDC = win32gui.GetWindowDC(handle)
+        mfcDC = win32ui.CreateDCFromHandle(hwndDC)
+        saveDC = mfcDC.CreateCompatibleDC()
+        saveBitMap = win32ui.CreateBitmap()
+        pos = get_window_pos(handle)
+        # 获取大小
+        w = pos.width
+        h = pos.height
+        # 图片大小
+        # 为bitmap开辟空间
+        saveBitMap.CreateCompatibleBitmap(mfcDC, w, h)
+        # 高度saveDC，将截图保存到saveBitmap中
+        saveDC.SelectObject(saveBitMap)
+        # 截取从左上角（0，0）长宽为（w，h）的图片
+        saveDC.BitBlt((0, 0), (w, h), mfcDC, (0, 0), win32con.SRCCOPY)
 
-    # if filename != None:
-    #     saveBitMap.SaveBitmapFile(saveDC, filename)
+        if filename != None:
+            saveBitMap.SaveBitmapFile(saveDC, filename)
 
-    # bmpinfo = saveBitMap.GetInfo()
-    # bmpstr = saveBitMap.GetBitmapBits(True)
-    # # 生成图像
-    # im_PIL = Image.frombuffer('RGB',
-    #                           (bmpinfo['bmWidth'],
-    #                            bmpinfo['bmHeight']),
-    #                           bmpstr, 'raw', 'BGRX')
-    # res = cv2.cvtColor(np.asarray(im_PIL), cv2.COLOR_RGB2BGR)
+        bmpinfo = saveBitMap.GetInfo()
+        bmpstr = saveBitMap.GetBitmapBits(True)
+        # 生成图像
+        im_PIL = Image.frombuffer('RGB',
+                                  (bmpinfo['bmWidth'],
+                                   bmpinfo['bmHeight']),
+                                  bmpstr, 'raw', 'BGRX')
+        res = cv2.cvtColor(np.asarray(im_PIL), cv2.COLOR_RGB2BGR)
 
-    # saveDC.SelectObject(saveBitMap)
-    # saveDC.DeleteDC()
-    # mfcDC.DeleteDC()
-    # win32gui.DeleteObject(saveBitMap.GetHandle())
-    # win32gui.ReleaseDC(handle, hwndDC)
+        saveDC.SelectObject(saveBitMap)
+        saveDC.DeleteDC()
+        mfcDC.DeleteDC()
+        win32gui.DeleteObject(saveBitMap.GetHandle())
+        win32gui.ReleaseDC(handle, hwndDC)
+
+        return res
 
 ################################################################################
 #   ImageGrab方式截图，要求不能被遮挡
 ################################################################################
-    pos = get_window_pos(get_title())
-    bbox = (pos.x, pos.y, pos.x+pos.width, pos.y+pos.height)
-    res = ImageGrab.grab(bbox)
-    if show:
-        res.show()
-    if filename is not None:
-        res.save(filename)
+    else:
+        pos = get_window_pos(get_title())
+        bbox = (pos.x, pos.y, pos.x+pos.width, pos.y+pos.height)
+        res = ImageGrab.grab(bbox)
+        if show:
+            res.show()
+        if filename is not None:
+            res.save(filename)
 
-    res = cv2.cvtColor(np.asarray(res), cv2.COLOR_RGB2BGR)
+        res = cv2.cvtColor(np.asarray(res), cv2.COLOR_RGB2BGR)
 
-    return res
+        return res
 
 
 def match(img_rgb, template_rgb, show_result=False, thresold=0.7, gray=True):

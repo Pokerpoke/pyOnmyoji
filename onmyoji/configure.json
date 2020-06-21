@@ -1,4 +1,5 @@
 {
+    "game_ui_title": "UI",
     "game_title": "阴阳师-网易游戏",
     "game_workspace_path": "${game_workspace}",
     "game_mods_path": "${game_workspace}\\mods",
@@ -6,5 +7,6 @@
     "game_log_file_path": "${game_workspace}\\log\\yys.log",
     "game_background": true,
     "game_window_width": 1136,
-    "game_window_height": 640
+    "game_window_height": 640,
+    "game_image_grab": false
 }

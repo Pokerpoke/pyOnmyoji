@@ -19,7 +19,7 @@ from onmyoji import env
 
 
 window = tk.Tk()
-window.title("123")
+window.title(env.get("game_ui_title"))
 
 CURRENT_MOD = None
 
@@ -29,10 +29,12 @@ var_background.set(env.get("game_background") == True)
 var_debug = tk.BooleanVar()
 var_debug.set(True)
 
+var_image_grab = tk.BooleanVar()
+var_image_grab.set(False)
+
 
 def set_debug():
     global var_debug
-    global GAME_LOG_FILE
 
     if var_debug.get() == True:
         logging.basicConfig(
@@ -45,6 +47,15 @@ def set_debug():
             ])
     else:
         logging.getLogger().setLevel(logging.INFO)
+
+
+def set_game_image_grab():
+    global var_debug
+
+    if var_debug.get() == True:
+        env.set("game_image_grab", True)
+    else:
+        env.set("game_image_grab", False)
 
 
 def init():
@@ -212,12 +223,14 @@ def main():
                    command=set_background).pack()
     tk.Checkbutton(window, text="调试", variable=var_debug,
                    command=set_debug).pack()
+    tk.Checkbutton(window, text="image_grab方式", variable=var_image_grab,
+                   command=set_game_image_grab).pack()
 
     generate_mods_button()
 
     tk.Button(window, text="停止", command=stop_current_mod).pack()
 
-    tk.Button(window, text="获取窗口句柄", command=m.get_handle).pack()
+    tk.Button(window, text="获取窗口句柄", command=m.get_handles).pack()
 
 
 main()
