@@ -1,32 +1,21 @@
-def main_process(thresold=0.7, type=0):
-    '''
-    0 - screen shot
-    1 - file
-    '''
-    import sys
-    import cv2
-    sys.path.append("../../onmyoji")
-    import onmyoji.utils as u
-    import os
-    import logging
-    from onmyoji import env
+from onmyoji.game_instance import GameInstance
+from onmyoji import env
+import cv2
 
-    # type = 1
+import onmyoji.utils as u
 
-    resource_path = os.path.join(env.get(
-        "game_mods_path"), "match_test", "img", "resource.png")
-    template_path = os.path.join(env.get(
-        "game_mods_path"), "match_test", "img", "template.png")
 
-    if type == 0:
-        resource = u.get_screenshot(u.get_title())
-    elif type == 1:
-        resource = cv2.imread(resource_path)
+def main_process(threhold=0.7):
 
-    template = cv2.imread(template_path)
+    leader_handle = env.get("game_leader_handle")
+    print(leader_handle)
+    u.get_screenshot(leader_handle, show=True)
+    print(1)
 
-    logging.info("Match.")
-    pos = u.match(resource, template, show_result=True,
-                  thresold=thresold)
-    for p in pos:
-        print("("+str(p.x)+", "+str(p.y)+")")
+    l = GameInstance(leader_handle, "match_test")
+    res = l.get_screenshot(show=True)
+    print(1)
+
+    print(l.img_path("template"))
+    template = cv2.imread(l.img_path("template"))
+    l.match(res, template, show_result=True)

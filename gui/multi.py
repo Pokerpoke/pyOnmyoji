@@ -6,6 +6,8 @@ from tkinter import messagebox
 import onmyoji.utils as u
 import threading
 
+from onmyoji import env
+
 MULTI_CURRENT_HANDLE = None
 
 MULTI_LEADER_HANDLE = None
@@ -29,6 +31,7 @@ def get_leader_handle():
     t.start()
     t.join()
     res = t.get_ret()
+    env.set("game_leader_handle", res)
     MULTI_LEADER_HANDLE = res
 
 
@@ -39,6 +42,7 @@ def get_member_handle():
     t.start()
     t.join()
     res = t.get_ret()
+    env.set("game_member_handle", res)
     MULTI_MEMBER_HANDLE = res
 
 

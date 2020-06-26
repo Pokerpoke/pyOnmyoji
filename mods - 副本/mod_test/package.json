@@ -1,0 +1,13 @@
+{
+    "name": "mod_test",
+    "text": "测试函数",
+    "version": "0.1",
+    "params": [
+        {
+            "param": "thresold",
+            "text": "阈值",
+            "param_t": "float",
+            "default": 0.7
+        }
+    ]
+}

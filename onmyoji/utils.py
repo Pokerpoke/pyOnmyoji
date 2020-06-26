@@ -22,6 +22,11 @@ from threading import Thread
 
 
 class OnmyojiThread(Thread):
+    """
+    封装后的线程
+    @TODO 转移到Onmyoji相关文件中
+    """
+
     def __init__(self, target):
         Thread.__init__(self)
         self.ret_val = None
@@ -35,18 +40,30 @@ class OnmyojiThread(Thread):
 
 
 def get_title():
+    """
+    从全局变量中读取游戏名
+    """
     return env.get("game_title")
 
 
 def get_background():
+    """
+    从全局变量中读取后台运行标志
+    """
     return env.get("game_background")
 
 
 def get_window_handle(title):
+    """
+    通过标题获取窗口句柄
+    """
     return find_window(title)
 
 
 def get_cursor_window_handle():
+    """
+    获取鼠标点击处的窗口句柄
+    """
     # Left button down = 0 or 1. Button up = -127 or -128
     state_left = win32api.GetKeyState(0x01)
     # Right button down = 0 or 1. Button up = -127 or -128
@@ -81,7 +98,11 @@ def get_cursor_window_handle():
 
 
 class Pos(object):
-    def __init__(self, x=0, y=0, w=0, h=0, i=0):
+    """
+    窗口位置类
+    """
+
+    def __init__(self, x=0, y=0, w=0, h=0):
         self.x = x
         self.y = y
         self.width = w
@@ -89,6 +110,10 @@ class Pos(object):
 
 
 class Point(object):
+    """
+    点
+    """
+
     def __init__(self, x=0, y=0):
         self.x = x
         self.y = y
@@ -116,6 +141,9 @@ class Point(object):
 
 
 def move(p, continuous=False, interval=0.1):
+    """
+    移动鼠标
+    """
     if continuous:
         pass
     else:
@@ -123,10 +151,14 @@ def move(p, continuous=False, interval=0.1):
 
 
 def distance(x, y):
+    """
+    计算两点间的距离
+    """
     return math.sqrt((y.y-x.y)*(y.y-x.y)+(y.x-x.x)*(y.x-x.x))
 
 
-def slide(p_src, p_des, v=1, duration=None, interval=0.01, release=True):
+def slide(handle, p_src, p_des, v=1,
+          duration=None, interval=0.01, release=True):
     """
     滑动操作，从p_src滑动到p_des
     """
@@ -135,48 +167,54 @@ def slide(p_src, p_des, v=1, duration=None, interval=0.01, release=True):
 
     x = p_src.x
     y = p_src.y
+    # 距离
     d = distance(p_src, p_des)
-    v = d/duration
+    # 速度
+    v = d / duration
+    # 偏移量
     d_x = p_des.x - p_src.x
     d_y = p_des.y - p_src.y
+    # 速度分量
     v_x = v * d_x / d
     v_y = v * d_y / d
-
+    # 临时变量用于迭代
     p_cur = Point(x, y)
     p_next = Point()
-
+    # 后台运行
     if get_background():
-        window_handle = find_window(get_title())
-
-        pos_body = get_window_pos(window_handle)
-
+        pos_body = get_window_pos(handle)
         # 加上偏移，传进来的坐标有标题栏和边框
         # 手动测试的，不一定完全准确
         p_cur.x = p_cur.x - pos_body.x - 5
         p_cur.y = p_cur.y - pos_body.y - 30
-
-        long_position = win32api.MAKELONG(p_cur.x, p_cur.y)  # 模拟鼠标指针 传送到指定坐标
+        # 模拟鼠标指针 传送到指定坐标
+        long_position = win32api.MAKELONG(p_cur.x, p_cur.y)
         win32gui.SendMessage(
-            window_handle, win32con.WM_MOUSEMOVE, 0, long_position)
+            handle, win32con.WM_MOUSEMOVE, 0, long_position)
+        # 模拟鼠标按下
         win32gui.PostMessage(
-            window_handle, win32con.WM_LBUTTONDOWN, 0, long_position)  # 模拟鼠标按下
+            handle, win32con.WM_LBUTTONDOWN, 0, long_position)
 
         t = int(duration / interval)
         for _ in range(t):
             p_next.x = p_cur.x + v_x*interval
-            p_next.y = p_cur.y + v_y*interval
+            p_next.y = p_cur.y + v_y * interval
+            # 模拟鼠标指针 传送到指定坐标
             long_position = win32api.MAKELONG(
-                int(p_next.x), int(p_next.y))  # 模拟鼠标指针 传送到指定坐标
+                int(p_next.x), int(p_next.y))
             win32gui.SendMessage(
-                window_handle, win32con.WM_MOUSEMOVE, 0, long_position)
+                handle, win32con.WM_MOUSEMOVE, 0, long_position)
             p_cur = p_next
             time.sleep(interval)
 
         if release:
+            # 模拟鼠标指针 传送到指定坐标
             long_position = win32api.MAKELONG(
-                int(p_next.x), int(p_next.y))  # 模拟鼠标指针 传送到指定坐标
+                int(p_next.x), int(p_next.y))
+            # 模拟鼠标弹起
             win32gui.SendMessage(
-                window_handle, win32con.WM_LBUTTONUP, 0, long_position)  # 模拟鼠标弹起
+                handle, win32con.WM_LBUTTONUP, 0, long_position)
+    # 前台运行
     else:
         move(p_cur)
         win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0)
@@ -191,21 +229,20 @@ def slide(p_src, p_des, v=1, duration=None, interval=0.01, release=True):
             win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP, 0, 0, 0, 0)
 
 
-def click(p, duration=0):
+def click(p, handle=None, duration=0):
     """
     点击操作
     """
+    # 持续时间
     if duration == 0:
         duration = random.randint(20, 80)/1000
 
     background = get_background()
-    if p == None:
+    if p is None:
         return
-
+    # 后台运行
     if background:
-        window_handle = find_window(get_title())
-
-        pos_body = get_window_pos(window_handle)
+        pos_body = get_window_pos(handle)
 
         x = p.x - pos_body.x - 5
         y = p.y - pos_body.y - 30
@@ -213,14 +250,14 @@ def click(p, duration=0):
         # 模拟鼠标指针 传送到指定坐标
         long_position = win32api.MAKELONG(x, y)
         win32gui.SendMessage(
-            window_handle, win32con.WM_MOUSEMOVE, 0, long_position)
+            handle, win32con.WM_MOUSEMOVE, 0, long_position)
         # 模拟鼠标按下
         win32gui.SendMessage(
-            window_handle, win32con.WM_LBUTTONDOWN, 0, long_position)
+            handle, win32con.WM_LBUTTONDOWN, 0, long_position)
         time.sleep(duration)
         # 模拟鼠标弹起
         win32gui.SendMessage(
-            window_handle, win32con.WM_LBUTTONUP, 0, long_position)
+            handle, win32con.WM_LBUTTONUP, 0, long_position)
 
         logging.debug("点击("+str(p.x)+", "+str(p.y)+")")
     else:
@@ -243,11 +280,11 @@ def find_window(title):
     return handle
 
 
-def get_window_pos(window_handle):
+def get_window_pos(handle):
     """
     获取窗口位置，返回(x,y,width,heigth)
     """
-    rect = win32gui.GetWindowRect(find_window(get_title()))
+    rect = win32gui.GetWindowRect(handle)
     x = rect[0]
     y = rect[1]
     w = rect[2] - x
@@ -257,7 +294,7 @@ def get_window_pos(window_handle):
     return pos
 
 
-def get_screenshot(title, filename=None, show=False):
+def get_screenshot(handle, filename=None, show=False):
     """
     截图
     """
@@ -265,9 +302,9 @@ def get_screenshot(title, filename=None, show=False):
 #   以前可以用，不知道是不是处理过这种方法了
 #   貌似阴阳师用win32截图出来，现在是全黑的，暂时弃用
 #   PyQt5截图也不行了
+#   后来又行了，可能是显卡驱动问题？增加了一个单选框进行切换
 ################################################################################
     if not env.get("game_image_grab"):
-        handle = find_window(get_title())
         hwndDC = win32gui.GetWindowDC(handle)
         mfcDC = win32ui.CreateDCFromHandle(hwndDC)
         saveDC = mfcDC.CreateCompatibleDC()
@@ -283,7 +320,7 @@ def get_screenshot(title, filename=None, show=False):
         saveDC.SelectObject(saveBitMap)
         # 截取从左上角（0，0）长宽为（w，h）的图片
         saveDC.BitBlt((0, 0), (w, h), mfcDC, (0, 0), win32con.SRCCOPY)
-
+        # 是否保存为文件
         if filename != None:
             saveBitMap.SaveBitmapFile(saveDC, filename)
 
@@ -295,7 +332,7 @@ def get_screenshot(title, filename=None, show=False):
                                    bmpinfo['bmHeight']),
                                   bmpstr, 'raw', 'BGRX')
         res = cv2.cvtColor(np.asarray(im_PIL), cv2.COLOR_RGB2BGR)
-
+        # 清理句柄
         saveDC.SelectObject(saveBitMap)
         saveDC.DeleteDC()
         mfcDC.DeleteDC()
@@ -308,7 +345,7 @@ def get_screenshot(title, filename=None, show=False):
 #   ImageGrab方式截图，要求不能被遮挡
 ################################################################################
     else:
-        pos = get_window_pos(get_title())
+        pos = get_window_pos(handle)
         bbox = (pos.x, pos.y, pos.x+pos.width, pos.y+pos.height)
         res = ImageGrab.grab(bbox)
         if show:
@@ -324,6 +361,8 @@ def get_screenshot(title, filename=None, show=False):
 def match(img_rgb, template_rgb, show_result=False, thresold=0.7, gray=True):
     """
     模板匹配
+    接受RGB格式的图片作为输入，目前灰度处理后进行匹配，不包含颜色
+    @TODO：增加对颜色的判断
     """
     img_gray = None
     template_gray = None
@@ -353,12 +392,12 @@ def match(img_rgb, template_rgb, show_result=False, thresold=0.7, gray=True):
     return pos
 
 
-def exists(template, flag=0, thresold=0.7, random_pos=True):
+def exists(handle, template, flag=0, thresold=0.7, random_pos=True):
     if type(template) == str:
         template = cv2.imread(template)
 
-    pos_body = get_window_pos(find_window(get_title()))
-    resource = get_screenshot(get_title())
+    pos_body = get_window_pos(handle)
+    resource = get_screenshot(handle)
     pos = match(resource, template, thresold=thresold)
     if len(pos) > 0:
         logging.debug("目标模板存在")
@@ -379,7 +418,7 @@ def exists(template, flag=0, thresold=0.7, random_pos=True):
         return None
 
 
-def wait_until(template, timeout=10,
+def wait_until(handle, template, timeout=10,
                interval=1, flag=0,
                thresold=0.7, notify=True,
                raise_except=True):
@@ -389,11 +428,11 @@ def wait_until(template, timeout=10,
     if type(template) == str:
         template = cv2.imread(template)
 
-    pos_body = get_window_pos(find_window(get_title()))
+    pos_body = get_window_pos(handle)
 
     begin_time = datetime.now()
     while True:
-        resource = get_screenshot(get_title())
+        resource = get_screenshot(handle)
 
         logging.debug("匹配中...")
         pos = match(resource, template, thresold=thresold)
@@ -421,7 +460,7 @@ def wait_until(template, timeout=10,
     return None
 
 
-def click_if_exists(template,
+def click_if_exists(template, handle,
                     thresold=0.7,
                     click_random=10,
                     click_offset=(0, 0),
@@ -429,7 +468,7 @@ def click_if_exists(template,
     """
     Click if template exists.
     """
-    _p = exists(template=template, thresold=thresold)
+    _p = exists(handle=handle, template=template, thresold=thresold)
     if _p is not None:
         _p = offset_position(_p, click_offset)
         random_sleep(interval, 0.2)
@@ -444,9 +483,9 @@ def click_until():
 
 def offset_position(p, offset):
     if type(offset) == tuple:
-        return p+Point(offset[0], offset[1])
+        return p + Point(offset[0], offset[1])
     elif type(offset) == Point:
-        return p+Point(offset.x, offset.y)
+        return p + Point(offset.x, offset.y)
 
 
 def random_position(p, offset=10):
@@ -462,12 +501,12 @@ def random_sleep(t, offset=0):
     return time.sleep(random_time(t, offset))
 
 
-def random_click(p, offset=10):
-    return click(random_position(p, offset))
+def random_click(p, handle=None,  offset=10):
+    return click(random_position(p, offset), handle)
 
 
-def position_relative(x, y):
-    pos_window = get_window_pos(find_window(get_title()))
+def position_relative(handle, x, y):
+    pos_window = get_window_pos(handle)
     p = Point(int(pos_window.x +
                   pos_window.width * x),
               int(pos_window.y +

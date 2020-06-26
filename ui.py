@@ -24,7 +24,7 @@ window.title(env.get("game_ui_title"))
 CURRENT_MOD = None
 
 var_background = tk.BooleanVar()
-var_background.set(env.get("game_background") == True)
+var_background.set(env.get("game_background"))
 
 var_debug = tk.BooleanVar()
 var_debug.set(True)
@@ -32,11 +32,17 @@ var_debug.set(True)
 var_image_grab = tk.BooleanVar()
 var_image_grab.set(False)
 
+var_multi = tk.BooleanVar()
+var_multi.set(False)
+
 
 def set_debug():
+    """
+    调试单选框
+    """
     global var_debug
 
-    if var_debug.get() == True:
+    if var_debug.get():
         logging.basicConfig(
             format="[%(asctime)s]: %(levelname)s - %(message)s",
             datefmt='%Y-%m-%d %H:%M:%S',
@@ -50,23 +56,47 @@ def set_debug():
 
 
 def set_game_image_grab():
-    global var_debug
+    """
+    是否使用image_grab模式
+    """
+    global var_image_grab
 
-    if var_debug.get() == True:
+    if var_image_grab.get():
         env.set("game_image_grab", True)
     else:
         env.set("game_image_grab", False)
 
 
+def set_game_multi():
+    """
+    多开
+    """
+    global var_multi
+
+    if var_multi.get():
+        env.set("game_multi", True)
+    else:
+        env.set("game_multi", False)
+
+
+def set_default_game_handle():
+    """
+    设置默认窗口句柄
+    """
+    handle = u.get_window_handle(env.get("game_title"))
+    env.set("game_default_handle", handle)
+
+
 def init():
     set_debug()
     center_window(500, 700)
-
-    # import paths
+    # 设置相关路径
     mod_path = env.get("game_mods_path")
     sys.path.append(mod_path)
     mod_path = env.get("game_utils_path")
     sys.path.append(mod_path)
+
+    set_default_game_handle()
 
 
 def center_window(w, h):
@@ -107,18 +137,18 @@ def generate_mods_button():
         col_idx = 0
         with open(info_path, encoding='UTF-8') as f:
             mod_info = json.load(f)
-
+        # 可见性
         if "visible" in mod_info:
             if not mod_info["visible"]:
                 continue
-
+        # 显示名称
         if "text" in mod_info:
             tk.Label(mod_frame, text=mod_info["text"]).grid(
                 row=row_idx, column=col_idx)
         else:
             tk.Label(mod_frame, text=mod_name).grid(
                 row=row_idx, column=col_idx)
-
+        # 列加一
         col_idx = col_idx+1
 
         if "params" in mod_info:
@@ -225,6 +255,8 @@ def main():
                    command=set_debug).pack()
     tk.Checkbutton(window, text="image_grab方式", variable=var_image_grab,
                    command=set_game_image_grab).pack()
+    tk.Checkbutton(window, text="多开", variable=var_multi,
+                   command=set_game_multi).pack()
 
     generate_mods_button()
 
