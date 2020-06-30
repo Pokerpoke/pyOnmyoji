@@ -8,14 +8,12 @@ import onmyoji.utils as u
 def main_process(threhold=0.7):
 
     leader_handle = env.get("game_leader_handle")
-    print(leader_handle)
-    u.get_screenshot(leader_handle, show=True)
-    print(1)
+    member_handle = env.get("game_member_handle")
 
     l = GameInstance(leader_handle, "match_test")
-    res = l.get_screenshot(show=True)
-    print(1)
+    m = GameInstance(member_handle, "match_test")
 
-    print(l.img_path("template"))
     template = cv2.imread(l.img_path("template"))
-    l.match(res, template, show_result=True)
+
+    l.match(l.get_screenshot(), template, show_result=True)
+    m.match(m.get_screenshot(), template, show_result=True)

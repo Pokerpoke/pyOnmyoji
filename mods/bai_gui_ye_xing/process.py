@@ -1,8 +1,8 @@
 import logging
 import os
 from datetime import datetime
-import onmyoji.utils as u
-import onmyoji.onmyoji_funcs as o
+import onmyoji.utils as utils
+from onmyoji.game_instance import GameInstance
 
 
 def img_path(img_name):
@@ -10,7 +10,12 @@ def img_path(img_name):
     return path
 
 
-def main_process(times=1):
+def main_process(times=1, handle=None):
+
+    handle = utils.check_handle(handle)
+
+    u = GameInstance(handle, "bai_gui_ye_xing")
+
     img_dir = os.path.join(__file__, "..", "img")
 
     logging.info("将运行："+str(times)+"次")
@@ -18,8 +23,8 @@ def main_process(times=1):
     INVITED_MAX = False
     INVITED = False
 
-    if o.current_scene() is not None:
-        o.goto_scene("bai_gui_ye_xing")
+    if u.current_scene() is not None:
+        u.goto_scene("bai_gui_ye_xing")
 
     for i in range(times):
         if not INVITED:

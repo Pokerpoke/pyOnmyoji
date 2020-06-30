@@ -6,7 +6,8 @@
     ],
     "files.autoGuessEncoding": true,
     "python.autoComplete.extraPaths": [
-        "${workspaceRoot}/mods"
+        "${workspaceRoot}/mods",
+        "${workspaceRoot}/onmyoji"
     ],
     "python.pythonPath": "C:\\Users\\j8245\\AppData\\Local\\Programs\\Python\\Python38-32\\python.exe"
 }

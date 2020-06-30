@@ -129,7 +129,7 @@ class Point(object):
         return self
 
     def __eq__(self, other):
-        if other == None:
+        if other is None:
             return False
         elif self.x == other.x and self.y == other.y:
             return True
@@ -157,11 +157,23 @@ def distance(x, y):
     return math.sqrt((y.y-x.y)*(y.y-x.y)+(y.x-x.x)*(y.x-x.x))
 
 
-def slide(handle, p_src, p_des, v=1,
+def check_handle(handle):
+    """
+    如果handle为None则获取默认句柄
+    """
+    if handle is None:
+        return get_window_handle(get_title())
+    else:
+        return handle
+
+
+def slide(p_src, p_des, handle=None, v=1,
           duration=None, interval=0.01, release=True):
     """
     滑动操作，从p_src滑动到p_des
     """
+    handle = check_handle(handle)
+
     if duration == None:
         duration = random.uniform(0.3, 0.5)
 
@@ -233,6 +245,7 @@ def click(p, handle=None, duration=0):
     """
     点击操作
     """
+    handle = check_handle(handle)
     # 持续时间
     if duration == 0:
         duration = random.randint(20, 80)/1000
@@ -280,10 +293,13 @@ def find_window(title):
     return handle
 
 
-def get_window_pos(handle):
+def get_window_pos(handle=None):
     """
     获取窗口位置，返回(x,y,width,heigth)
     """
+
+    handle = check_handle(handle)
+
     rect = win32gui.GetWindowRect(handle)
     x = rect[0]
     y = rect[1]
@@ -294,7 +310,7 @@ def get_window_pos(handle):
     return pos
 
 
-def get_screenshot(handle, filename=None, show=False):
+def get_screenshot(handle=None, filename=None, show=False):
     """
     截图
     """
@@ -304,6 +320,8 @@ def get_screenshot(handle, filename=None, show=False):
 #   PyQt5截图也不行了
 #   后来又行了，可能是显卡驱动问题？增加了一个单选框进行切换
 ################################################################################
+    handle = check_handle(handle)
+    logging.info("current handle is: "+str(handle))
     if not env.get("game_image_grab"):
         hwndDC = win32gui.GetWindowDC(handle)
         mfcDC = win32ui.CreateDCFromHandle(hwndDC)
@@ -333,10 +351,10 @@ def get_screenshot(handle, filename=None, show=False):
                                   bmpstr, 'raw', 'BGRX')
         res = cv2.cvtColor(np.asarray(im_PIL), cv2.COLOR_RGB2BGR)
         # 清理句柄
-        saveDC.SelectObject(saveBitMap)
+        # saveDC.SelectObject(saveBitMap)
+        win32gui.DeleteObject(saveBitMap.GetHandle())
         saveDC.DeleteDC()
         mfcDC.DeleteDC()
-        win32gui.DeleteObject(saveBitMap.GetHandle())
         win32gui.ReleaseDC(handle, hwndDC)
 
         return res
@@ -358,7 +376,8 @@ def get_screenshot(handle, filename=None, show=False):
         return res
 
 
-def match(img_rgb, template_rgb, show_result=False, thresold=0.7, gray=True):
+def match(img_rgb, template_rgb,
+          show_result=False, thresold=0.7, gray=True):
     """
     模板匹配
     接受RGB格式的图片作为输入，目前灰度处理后进行匹配，不包含颜色
@@ -392,7 +411,10 @@ def match(img_rgb, template_rgb, show_result=False, thresold=0.7, gray=True):
     return pos
 
 
-def exists(handle, template, flag=0, thresold=0.7, random_pos=True):
+def exists(template, handle=None, flag=0, thresold=0.7, random_pos=True):
+
+    handle = check_handle(handle)
+
     if type(template) == str:
         template = cv2.imread(template)
 
@@ -418,13 +440,14 @@ def exists(handle, template, flag=0, thresold=0.7, random_pos=True):
         return None
 
 
-def wait_until(handle, template, timeout=10,
+def wait_until(template, timeout=10, handle=None,
                interval=1, flag=0,
                thresold=0.7, notify=True,
                raise_except=True):
     '''
     flag 0 -> center
     '''
+    handle = check_handle(handle)
     if type(template) == str:
         template = cv2.imread(template)
 
@@ -460,7 +483,7 @@ def wait_until(handle, template, timeout=10,
     return None
 
 
-def click_if_exists(template, handle,
+def click_if_exists(template, handle=None,
                     thresold=0.7,
                     click_random=10,
                     click_offset=(0, 0),
@@ -468,6 +491,7 @@ def click_if_exists(template, handle,
     """
     Click if template exists.
     """
+    handle = check_handle(handle)
     _p = exists(handle=handle, template=template, thresold=thresold)
     if _p is not None:
         _p = offset_position(_p, click_offset)
@@ -481,7 +505,10 @@ def click_until():
     pass
 
 
-def offset_position(p, offset):
+def offset_position(p, offset=10):
+    """
+    偏移位置
+    """
     if type(offset) == tuple:
         return p + Point(offset[0], offset[1])
     elif type(offset) == Point:
@@ -489,23 +516,40 @@ def offset_position(p, offset):
 
 
 def random_position(p, offset=10):
+    """
+    随机位置
+    """
     return p + Point(random.randint(-offset, offset),
                      random.randint(-offset, offset))
 
 
 def random_time(t, offset=1):
+    """
+    随机时间
+    """
     return t + random.uniform(-offset, offset)
 
 
 def random_sleep(t, offset=0):
+    """
+    随机随眠
+    """
     return time.sleep(random_time(t, offset))
 
 
-def random_click(p, handle=None,  offset=10):
-    return click(random_position(p, offset), handle)
+def random_click(p, offset=10, handle=None):
+    """
+    随机点击
+    """
+    handle = check_handle(handle)
+    return click(random_position(p, offset), handle=handle)
 
 
-def position_relative(handle, x, y):
+def position_relative(x, y, handle=None):
+    """
+    计算相对位置
+    """
+    handle = check_handle(handle)
     pos_window = get_window_pos(handle)
     p = Point(int(pos_window.x +
                   pos_window.width * x),
@@ -514,14 +558,18 @@ def position_relative(handle, x, y):
     return p
 
 
-def set_foreround_window(title):
-    GAME_TITLE = env.get("game_title")
-
-    handle = find_window(GAME_TITLE)
+def set_foreround_window(handle=None):
+    """
+    将窗口置前
+    """
+    handle = check_handle(handle)
     win32gui.ShowWindow(handle, win32con.SW_RESTORE)
     win32gui.SetForegroundWindow(handle)
 
 
 def toast(message, duration=5):
+    """
+    win10通知
+    """
     toaster = ToastNotifier()
     toaster.show_toast(message, duration=duration, threaded=True)
