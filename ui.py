@@ -228,11 +228,9 @@ def set_background():
     if var_background.get():
         logging.info("Run in background.")
         env.push("game_background", True)
-        # os.environ["GAME_BACKGROUND"] = "True"
     else:
         logging.info("Run in foreground.")
         env.push("game_background", False)
-        # os.environ["GAME_BACKGROUND"] = "False"
 
 
 def stop_current_mod():
@@ -253,16 +251,14 @@ def main():
                    command=set_background).pack()
     tk.Checkbutton(window, text="调试", variable=var_debug,
                    command=set_debug).pack()
-    tk.Checkbutton(window, text="image_grab方式", variable=var_image_grab,
+    tk.Checkbutton(window, text="image_grab方式(识别测试中截图为黑色时勾选)", variable=var_image_grab,
                    command=set_game_image_grab).pack()
-    tk.Checkbutton(window, text="多开", variable=var_multi,
-                   command=set_game_multi).pack()
 
     generate_mods_button()
 
     tk.Button(window, text="停止", command=stop_current_mod).pack()
 
-    tk.Button(window, text="获取窗口句柄", command=m.get_handles).pack()
+    tk.Button(window, text="多开", command=m.get_handles).pack()
 
 
 main()

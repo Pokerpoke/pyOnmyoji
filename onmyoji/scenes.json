@@ -203,5 +203,11 @@
             "fan_hui",
             "yin_yang_liao_fan_hui"
         ]
+    },
+    "xie_zhan_dui_wu": {
+        "chinese": "协站队伍",
+        "mark": "xie_zhan_dui_wu",
+        "route": [],
+        "to_ting_yuan": []
     }
 }

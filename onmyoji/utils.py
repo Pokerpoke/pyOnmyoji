@@ -321,7 +321,6 @@ def get_screenshot(handle=None, filename=None, show=False):
 #   后来又行了，可能是显卡驱动问题？增加了一个单选框进行切换
 ################################################################################
     handle = check_handle(handle)
-    logging.info("current handle is: "+str(handle))
     if not env.get("game_image_grab"):
         hwndDC = win32gui.GetWindowDC(handle)
         mfcDC = win32ui.CreateDCFromHandle(hwndDC)

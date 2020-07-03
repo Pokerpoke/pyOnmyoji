@@ -1,0 +1,13 @@
+{
+    "name": "yu_hun_multi",
+    "text": "御魂（多开）",
+    "version": "0.1",
+    "params": [
+        {
+            "param": "times",
+            "text": "次数",
+            "param_t": "int",
+            "default": 30
+        }
+    ]
+}

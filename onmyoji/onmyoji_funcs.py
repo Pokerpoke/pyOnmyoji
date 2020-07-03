@@ -4,7 +4,8 @@
 import os
 import logging
 import json
-from onmyoji.utils import *
+from utils import *
+import env
 
 
 cur_path = os.path.join(env.get("game_workspace_path"), "onmyoji")
@@ -55,7 +56,7 @@ def goto_scene(s, handle=None):
             click_mark(next_scene, handle=handle)
             random_sleep(1.5, 0.2)
     elif cur_scene in scene_conf:
-        goto_scene("ting_yuan")
+        goto_scene("ting_yuan", handle=handle)
         for next_scene in scene_conf[s]["route"]:
             if "0.98" in next_scene:
                 click_mark(next_scene, thresold=0.98, handle=handle)

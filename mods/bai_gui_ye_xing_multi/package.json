@@ -1,0 +1,13 @@
+{
+    "name": "bai_gui_ye_xing_multi",
+    "text": "百鬼夜行(多开)",
+    "version": "0.1",
+    "params": [
+        {
+            "param": "times",
+            "text": "次数",
+            "param_t": "int",
+            "default": 3
+        }
+    ]
+}
