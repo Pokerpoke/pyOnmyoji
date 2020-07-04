@@ -8,5 +8,6 @@
     "game_background": true,
     "game_window_width": 1136,
     "game_window_height": 640,
-    "game_image_grab": false
+    "game_image_grab": false,
+    "game_multi": false
 }

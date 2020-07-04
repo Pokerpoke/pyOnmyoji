@@ -1,5 +1,7 @@
 {
     "name": "xie_zuo",
     "text": "协作任务",
-    "version": "0.1"
+    "version": "0.1",
+    "visible": true,
+    "always_on": true
 }

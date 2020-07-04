@@ -13,7 +13,6 @@ class GameInstance():
         self.handle_ = handle
         self.mod_name_ = mod_name
         # 绑定参数
-        # onmyoji.utils
         self.slide = partial(u.slide, handle=self.handle_)
         self.click = partial(u.click, handle=self.handle_)
         self.get_screenshot = partial(u.get_screenshot, handle=self.handle_)
@@ -44,6 +43,9 @@ class GameInstance():
 
     def get_handle(self):
         return self.handle_
+
+    def get_mod_name(self):
+        return self.mod_name_
 
     def img_path(self, img_name):
         if self.mod_name_ is None:

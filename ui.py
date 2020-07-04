@@ -33,7 +33,7 @@ var_image_grab = tk.BooleanVar()
 var_image_grab.set(False)
 
 var_multi = tk.BooleanVar()
-var_multi.set(False)
+var_multi.set(env.get("game_multi"))
 
 
 def set_debug():
@@ -148,6 +148,11 @@ def generate_mods_button():
         else:
             tk.Label(mod_frame, text=mod_name).grid(
                 row=row_idx, column=col_idx)
+        # 常驻后台
+        if "always_on" in mod_info:
+            th = threading.Thread(target=mod.main_process)
+            th.setDaemon(True)
+            th.start()
         # 列加一
         col_idx = col_idx+1
 
@@ -163,7 +168,7 @@ def generate_mods_button():
                         row=row_idx, column=col_idx)
                 col_idx = col_idx + 1
 
-                entry = tk.Entry(mod_frame)
+                entry = tk.Entry(mod_frame, width=5)
                 entries.append(entry)
                 entry.grid(row=row_idx, column=col_idx)
 
@@ -253,6 +258,8 @@ def main():
                    command=set_debug).pack()
     tk.Checkbutton(window, text="image_grab方式(识别测试中截图为黑色时勾选)", variable=var_image_grab,
                    command=set_game_image_grab).pack()
+    tk.Checkbutton(window, text="多开", variable=var_multi,
+                   command=set_game_multi).pack()
 
     generate_mods_button()
 

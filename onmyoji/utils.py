@@ -495,7 +495,7 @@ def click_if_exists(template, handle=None,
     if _p is not None:
         _p = offset_position(_p, click_offset)
         random_sleep(interval, 0.2)
-        random_click(_p, click_random)
+        random_click(_p, click_random, handle=handle)
         return True
     return False
 

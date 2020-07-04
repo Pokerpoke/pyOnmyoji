@@ -67,7 +67,7 @@ def main_process(times=1, time_used=35, handle=None):
         u.random_sleep(1)
         try:
             p = u.wait_until(u.img_path("jia_ru_dui_wu"),
-                             timeout=5,
+                             timeout=20,
                              interval=0.1, notify=False)
             if p is not None:
                 logging.info("队员接受邀请")

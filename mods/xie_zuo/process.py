@@ -2,6 +2,8 @@ import os
 import logging
 from threading import Event
 import onmyoji.utils as u
+from onmyoji import env
+from onmyoji.game_instance import GameInstance
 
 STOP = Event()
 
@@ -27,10 +29,21 @@ def main_process(accept=True, times=1, time_used=7):
     reject_path = os.path.join(img_dir, "reject.png")
 
     while (True):
-        if accept:
-            u.click_if_exists(accept_path)
+        if not env.get("game_multi"):
+            if accept:
+                u.click_if_exists(accept_path, thresold=0.9)
+            else:
+                u.click_if_exists(reject_path, thresold=0.9)
+            u.random_sleep(1, 0.2)
         else:
-            u.click_if_exists(reject_path)
-        u.random_sleep(1, 0.2)
+            l = GameInstance(env.get("game_leader_handle"), "xie_zuo")
+            m = GameInstance(env.get("game_member_handle"), "xie_zuo")
+            if accept:
+                l.click_if_exists(accept_path, thresold=0.9)
+                m.click_if_exists(accept_path, thresold=0.9)
+            else:
+                l.click_if_exists(reject_path, thresold=0.9)
+                m.click_if_exists(reject_path, thresold=0.9)
+            u.random_sleep(1, 0.2)
         if STOP.is_set():
             break
