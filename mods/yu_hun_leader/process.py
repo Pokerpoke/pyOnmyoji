@@ -12,7 +12,7 @@ def img_path(img_name):
 
 
 def main_process(times=1, time_used=35, handle=None):
-    time_used_min = 18
+    time_used_min = 7
     DEFAULT_INVITED = False
 
     handle = utils.check_handle(handle)
@@ -33,7 +33,7 @@ def main_process(times=1, time_used=35, handle=None):
         # 等待战斗结束
         logging.info("等待胜利")
         p = u.wait_until(img_path("sheng_li"),
-                         timeout=time_used*2)
+                         timeout=time_used*3)
         # 胜利下方点击
         p = u.offset_position(p, (300, 300))
         u.random_sleep(1, 0.3)

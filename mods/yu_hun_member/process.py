@@ -13,7 +13,7 @@ def main_process(times=1, time_used=35, handle=None):
     u = GameInstance(handle, "yu_hun_member")
 
     # 最短时间，控制sleep以降低消耗
-    time_used_min = 18
+    time_used_min = 7
 
     logging.info("执行御魂（队员）"+str(times)+"次")
 
@@ -57,7 +57,7 @@ def main_process(times=1, time_used=35, handle=None):
 
         logging.info("等待胜利")
         p = u.wait_until(u.img_path("sheng_li"),
-                         timeout=time_used*2)
+                         timeout=time_used*3)
         u.random_sleep(1, 0.3)
 
         # 点赞
