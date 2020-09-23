@@ -22,6 +22,7 @@ def main_process(accept=True, times=1, time_used=7):
     global STOP
 
     STOP.clear()
+    STOP.set()
 
     img_dir = os.path.join(__file__, "..", "img")
 

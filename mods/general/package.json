@@ -1,0 +1,19 @@
+{
+    "name": "general",
+    "text": "通用",
+    "version": "0.1",
+    "params": [
+        {
+            "param": "times",
+            "text": "次数",
+            "param_t": "int",
+            "default": 30
+        },
+        {
+            "param": "time_used",
+            "text": "通关时间",
+            "param_t": "int",
+            "default": 7
+        }
+    ]
+}
