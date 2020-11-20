@@ -5,7 +5,7 @@ from onmyoji.game_instance import GameInstance
 import threading
 
 
-def main_process(time_used=7, times=30):
+def main_process(times=30, time_used=7):
     h = env.get("game_default_handle")
     g = GameInstance(h, "general")
 
@@ -14,6 +14,7 @@ def main_process(time_used=7, times=30):
 
         logging.info("Search for tiao_zhan.png.")
         p = g.wait_until(g.img_path("tiao_zhan"), timeout=time_used)
+        g.random_sleep(1)
         g.random_click(p, 10)
 
         p = g.wait_until(g.img_path("sheng_li"), timeout=time_used*5)

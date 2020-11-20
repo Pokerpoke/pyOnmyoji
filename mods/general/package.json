@@ -13,7 +13,7 @@
             "param": "time_used",
             "text": "通关时间",
             "param_t": "int",
-            "default": 7
+            "default": 20
         }
     ]
 }
