@@ -9,5 +9,9 @@
         "${workspaceRoot}/mods",
         "${workspaceRoot}/onmyoji"
     ],
-    "python.pythonPath": "C:\\Users\\j8245\\AppData\\Local\\Programs\\Python\\Python38-32\\python.exe"
+    "python.pythonPath": "C:\\Users\\j8245\\AppData\\Local\\Programs\\Python\\Python38-32\\python.exe",
+    "python.analysis.extraPaths": [
+        "${workspaceRoot}/mods",
+        "${workspaceRoot}/onmyoji"
+    ]
 }

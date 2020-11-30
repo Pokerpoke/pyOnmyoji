@@ -2,7 +2,6 @@ import logging
 from onmyoji import env
 import onmyoji.utils as u
 from onmyoji.game_instance import GameInstance
-import threading
 
 
 def main_process(times=30, time_used=7):
@@ -25,3 +24,5 @@ def main_process(times=30, time_used=7):
         p = g.wait_until(g.img_path("jie_suan"), timeout=time_used)
         u.random_sleep(2, 0.3)
         u.random_click(p, 20)
+
+    u.toast("执行"+str(times)+"次完成.")

@@ -11,9 +11,9 @@ import mods.jue_xing.process as jue_xing
 
 def main_process():
     img_dir = os.path.join(__file__, "..", "img")
-    cur_thread = threading.Thread(target=bai_gui.main_process, args=(1,))
-    cur_thread.start()
-    cur_thread.join()
+    # cur_thread = threading.Thread(target=bai_gui.main_process, args=(1,))
+    # cur_thread.start()
+    # cur_thread.join()
     cur_thread = threading.Thread(target=yu_hun.main_process, args=(17,))
     cur_thread.start()
     cur_thread.join()
