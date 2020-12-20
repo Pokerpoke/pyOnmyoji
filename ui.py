@@ -17,6 +17,16 @@ from onmyoji import utils as u
 from gui import multi as m
 from onmyoji import env
 
+import ctypes
+
+
+def SetProcessDPIAware():
+    # 设置高DPI敏感
+    ctypes.windll.user32.SetProcessDPIAware()
+
+
+SetProcessDPIAware()
+
 
 window = tk.Tk()
 window.title(env.get("game_ui_title"))
@@ -101,12 +111,13 @@ def init():
 
 def center_window(w, h):
     # 获取屏幕 宽、高
-    ws = window.winfo_screenwidth()
-    hs = window.winfo_screenheight()
+    # ws = window.winfo_screenwidth()
+    # hs = window.winfo_screenheight()
     # 计算 x, y 位置
-    x = (ws/2) - (w/2)
-    y = (hs/2) - (h/2)
-    window.geometry('%dx%d+%d+%d' % (w, h, x, y))
+    # x = (ws/2) - (w/2)
+    # y = (hs/2) - (h/2)
+    # window.geometry('%dx%d+%d+%d' % (w, h, x, y))
+    window.winfo_toplevel().wm_geometry("")
 
 
 def get_mods_list(path=env.get("game_mods_path")):

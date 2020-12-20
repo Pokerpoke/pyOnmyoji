@@ -36,7 +36,7 @@ def main_process(times=1, time_used=10):
 
     logging.info("Trig bonus.")
     if u.exists(os.path.join(img_dir, "bonus_deactive.png"),
-                thresold=0.98):
+                threshold=0.98):
         BONUS_ACTIVE = True
         bonus.process.main_process()
 
@@ -100,10 +100,10 @@ def main_process(times=1, time_used=10):
                 logging.info("Check if needed to change dog food.")
 
                 temp = u.exists(os.path.join(
-                    img_dir, "man_2.png"), thresold=0.99)
+                    img_dir, "man_2.png"), threshold=0.99)
                 if temp == None:
                     temp = u.exists(os.path.join(
-                        img_dir, "man_3.png"), thresold=0.99)
+                        img_dir, "man_3.png"), threshold=0.99)
                 if temp != None:
                     time.sleep(1)
                     huan_gou_liang.process.main_process()
@@ -139,7 +139,7 @@ def main_process(times=1, time_used=10):
             p = u.exists(os.path.join(img_dir, "tan_suo.png"))
             if p != None:
                 break
-            p = u.exists(os.path.join(img_dir, "bao_xiang.png"), thresold=0.8)
+            p = u.exists(os.path.join(img_dir, "bao_xiang.png"), threshold=0.8)
             if p != None:
                 logging.info("Discover treasure.")
                 u.random_sleep(1, 0.1)

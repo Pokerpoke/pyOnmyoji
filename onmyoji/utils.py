@@ -376,7 +376,7 @@ def get_screenshot(handle=None, filename=None, show=False):
 
 
 def match(img_rgb, template_rgb,
-          show_result=False, thresold=0.7, gray=True):
+          show_result=False, threshold=0.7, gray=True):
     """
     模板匹配
     接受RGB格式的图片作为输入，目前灰度处理后进行匹配，不包含颜色
@@ -396,7 +396,7 @@ def match(img_rgb, template_rgb,
         h, w, _ = template_gray.shape
 
     res = cv2.matchTemplate(img_gray, template_gray, cv2.TM_CCOEFF_NORMED)
-    loc = np.where(res >= thresold)
+    loc = np.where(res >= threshold)
     pos = []
     for pt in zip(*loc[::-1]):
         cv2.rectangle(img_rgb, pt,
@@ -410,7 +410,7 @@ def match(img_rgb, template_rgb,
     return pos
 
 
-def exists(template, handle=None, flag=0, thresold=0.7, random_pos=True):
+def exists(template, handle=None, flag=0, threshold=0.7, random_pos=True):
 
     handle = check_handle(handle)
 
@@ -419,7 +419,7 @@ def exists(template, handle=None, flag=0, thresold=0.7, random_pos=True):
 
     pos_body = get_window_pos(handle)
     resource = get_screenshot(handle)
-    pos = match(resource, template, thresold=thresold)
+    pos = match(resource, template, threshold=threshold)
     if len(pos) > 0:
         logging.debug("目标模板存在")
 
@@ -441,7 +441,7 @@ def exists(template, handle=None, flag=0, thresold=0.7, random_pos=True):
 
 def wait_until(template, timeout=10, handle=None,
                interval=1, flag=0,
-               thresold=0.7, notify=True,
+               threshold=0.7, notify=True,
                raise_except=True):
     '''
     flag 0 -> center
@@ -457,7 +457,7 @@ def wait_until(template, timeout=10, handle=None,
         resource = get_screenshot(handle)
 
         logging.debug("匹配中...")
-        pos = match(resource, template, thresold=thresold)
+        pos = match(resource, template, threshold=threshold)
         if len(pos) > 0:
             pos = pos[random.randint(0, len(pos) - 1)]
 
@@ -483,7 +483,7 @@ def wait_until(template, timeout=10, handle=None,
 
 
 def click_if_exists(template, handle=None,
-                    thresold=0.7,
+                    threshold=0.7,
                     click_random=10,
                     click_offset=(0, 0),
                     interval=0.5):
@@ -491,7 +491,7 @@ def click_if_exists(template, handle=None,
     Click if template exists.
     """
     handle = check_handle(handle)
-    _p = exists(handle=handle, template=template, thresold=thresold)
+    _p = exists(handle=handle, template=template, threshold=threshold)
     if _p is not None:
         _p = offset_position(_p, click_offset)
         random_sleep(interval, 0.2)

@@ -18,7 +18,7 @@ def main_process(times=1, time_used=7):
     u.random_click(p, 20)
 
     logging.info("Search for su_cai.png")
-    p = u.wait_until(os.path.join(img_dir, "su_cai.png"), thresold=0.99)
+    p = u.wait_until(os.path.join(img_dir, "su_cai.png"), threshold=0.99)
     u.random_sleep(1, 0.2)
     u.random_click(p, 20)
 
@@ -26,11 +26,11 @@ def main_process(times=1, time_used=7):
 
     for _ in range(4):
         logging.info("Search for man_2.png")
-        des = u.exists(os.path.join(img_dir, "man_2.png"), thresold=0.99)
+        des = u.exists(os.path.join(img_dir, "man_2.png"), threshold=0.99)
 
         if des == None:
             logging.info("Search for man_3.png")
-            des = u.exists(os.path.join(img_dir, "man_3.png"), thresold=0.99)
+            des = u.exists(os.path.join(img_dir, "man_3.png"), threshold=0.99)
 
         if des != None:
             des.y = des.y + 100
@@ -41,7 +41,7 @@ def main_process(times=1, time_used=7):
         # logging.info("Search for gou_liang_bai_dan.png")
         logging.info("Search for gou_liang_hong_dan.png")
         src = u.wait_until(os.path.join(
-            img_dir, "gou_liang_hong_dan.png"), thresold=0.99)
+            img_dir, "gou_liang_hong_dan.png"), threshold=0.99)
 
         if src != None:
             temp = u.Point(src.x, src.y-200)

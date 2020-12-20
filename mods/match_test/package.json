@@ -4,7 +4,7 @@
     "version": "0.1",
     "params": [
         {
-            "param": "thresold",
+            "param": "threshold",
             "text": "阈值",
             "param_t": "float",
             "default": 0.7

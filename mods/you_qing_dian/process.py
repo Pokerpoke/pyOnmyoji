@@ -23,7 +23,7 @@ def main_process():
         time_up = None
 
         p = o.exists(os.path.join(
-            img_dir, "you_qing_dian_fen_hong.png"), thresold=0.98)
+            img_dir, "you_qing_dian_fen_hong.png"), threshold=0.98)
         if p is not None:
             u.random_sleep(1, 0.2)
             u.random_click(p, 10)
