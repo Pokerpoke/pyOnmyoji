@@ -14,7 +14,7 @@ def main_process(bonus=["jin_bi_100",
     img_dir = os.path.join(__file__, "..", "img")
 
     u.click_if_exists(os.path.join(img_dir, "jia_cheng.png"),
-                      thresold=0.7, click_random=2)
+                      threshold=0.7, click_random=2)
     u.random_sleep(1, 0.2)
 
     if type(bonus) == str:
@@ -22,11 +22,11 @@ def main_process(bonus=["jin_bi_100",
 
     for b in bonus:
         u.click_if_exists(os.path.join(img_dir, b+".png"),
-                          thresold=0.98, click_offset=(240, 0))
+                          threshold=0.98, click_offset=(240, 0))
         u.random_sleep(0.5, 0.2)
 
     u.click_if_exists(os.path.join(img_dir, "jia_cheng.png"),
-                      thresold=0.7, click_random=2)
+                      threshold=0.7, click_random=2)
     u.random_sleep(1, 0.2)
 
     logging.info("加成转换完成")

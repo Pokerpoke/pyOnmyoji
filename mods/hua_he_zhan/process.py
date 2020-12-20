@@ -11,15 +11,19 @@ import mods.jue_xing.process as jue_xing
 
 def main_process():
     img_dir = os.path.join(__file__, "..", "img")
+    # 百鬼夜行
     # cur_thread = threading.Thread(target=bai_gui.main_process, args=(1,))
     # cur_thread.start()
     # cur_thread.join()
+    # 御魂
     cur_thread = threading.Thread(target=yu_hun.main_process, args=(17,))
     cur_thread.start()
     cur_thread.join()
+    # 觉醒
     cur_thread = threading.Thread(target=jue_xing.main_process, args=(13,))
     cur_thread.start()
     cur_thread.join()
+    # 困28
     cur_thread = threading.Thread(target=kun_28.main_process, args=(7,))
     cur_thread.start()
     cur_thread.join()
@@ -39,3 +43,5 @@ def main_process():
     o.goto_scene("ting_yuan")
 
     logging.info("花合战完成")
+
+    u.toast("花合战完成")

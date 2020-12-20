@@ -7,7 +7,7 @@ import mods.yu_hun_member.process as member
 import threading
 
 
-def main_process(thresold=0.7, type=0, times=5, time_used=35):
+def main_process(threshold=0.7, type=0, times=5, time_used=35):
     h = env.get("game_leader_handle")
     l = GameInstance(h, "mod_test")
     h = env.get("game_member_handle")

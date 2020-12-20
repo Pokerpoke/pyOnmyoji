@@ -59,7 +59,7 @@ def goto_scene(s, handle=None):
         goto_scene("ting_yuan", handle=handle)
         for next_scene in scene_conf[s]["route"]:
             if "0.98" in next_scene:
-                click_mark(next_scene, thresold=0.98, handle=handle)
+                click_mark(next_scene, threshold=0.98, handle=handle)
             else:
                 click_mark(next_scene, handle=handle)
             random_sleep(1.5, 0.2)
@@ -68,7 +68,7 @@ def goto_scene(s, handle=None):
         # raise RuntimeError("Scene cannot access.")
 
 
-def click_mark(mark, handle=None, thresold=0.7, interval=1, timeout=10):
+def click_mark(mark, handle=None, threshold=0.7, interval=1, timeout=10):
     """
     点击预设标志
     """
@@ -77,7 +77,7 @@ def click_mark(mark, handle=None, thresold=0.7, interval=1, timeout=10):
     handle = check_handle(handle)
 
     p = wait_until(os.path.join(cur_path, "img/" +
-                                mark + ".png"), thresold=thresold,
+                                mark + ".png"), threshold=threshold,
                    timeout=timeout, handle=handle)
     random_sleep(interval, 0.1)
     random_click(p, 10, handle=handle)
@@ -138,11 +138,11 @@ def set_current_mod(mod):
         os.environ["CURRENT_MOD"] = mod
 
 
-def win(timeout=10, handle=None, interval=1, thresold=0.7):
+def win(timeout=10, handle=None, interval=1, threshold=0.7):
     global cur_path
 
     handle = check_handle(handle)
 
     return wait_until(os.path.join(cur_path, "img", "sheng_li"),
                       timeout=timeout, interval=interval,
-                      notify=False, thresold=thresold, handle=handle)
+                      notify=False, threshold=threshold, handle=handle)

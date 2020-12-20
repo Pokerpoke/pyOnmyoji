@@ -42,7 +42,7 @@ def main_process(times=1, handle=None):
             logging.info("匹配 xuan_ze_hao_you.png.")
             p = u.wait_until(os.path.join(
                 img_dir, "xuan_ze_hao_you.png"),
-                thresold=0.5)
+                threshold=0.5)
             u.random_sleep(1, 0.5)
             u.random_click(p, 5)
             try:
